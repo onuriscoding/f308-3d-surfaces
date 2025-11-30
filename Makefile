@@ -1,5 +1,5 @@
 ifndef OF_ROOT
-    OF_ROOT=$(HOME)/Documents/openFrameworks/of_v0.12.1_osx_release
+    OF_ROOT=$(HOME)/Documents/INFO/ULB_Projects/BA3/PROJ3/of_v0.12.1_linux64_gcc6_release
 endif
 
 APPNAME = f308-3d-surfaces

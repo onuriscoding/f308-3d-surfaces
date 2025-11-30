@@ -47,3 +47,5 @@ compile_commands.json
 
 Desktop.ini
 ehthumbs.db
+*.code-workspace
+/bin
