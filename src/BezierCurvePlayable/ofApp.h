@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "/home/clover/Documents/INFO/of_v0.12.1_linux64_gcc6_release/addons/ofxGui/src/ofxGui.h"
+#include "ofxGui.h"
 #include "BezierMath.h"
 #include "ofMesh.h"
 
