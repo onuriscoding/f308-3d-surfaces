@@ -49,3 +49,4 @@ Desktop.ini
 ehthumbs.db
 *.code-workspace
 /bin
+/src/BezierCurvePlayable/bin
