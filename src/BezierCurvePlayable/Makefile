@@ -1,7 +1,7 @@
 PROJECT_NAME = BezierCurbePlayable
 
 PROJECT_ROOT = $(realpath .)
-OF_ROOT = ../../../../../
+OF_ROOT = /home/clover/Documents/INFO/of_v0.12.1_linux64_gcc6_release
 
 PROJECT_SRC = src/BezierCurbePlayable/ofApp.cpp src/BezierCurbePlayable/main.cpp
 

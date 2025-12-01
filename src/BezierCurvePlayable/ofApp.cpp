@@ -11,6 +11,7 @@ void ofApp::setup(){
     selectedPoint = -1;
     numSteps = 100;
     curveLength = 0;
+    deltaRandom = 1;
     riverMesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
     
     // Initialiser les points de contrôle
@@ -21,30 +22,30 @@ void ofApp::setup(){
     gui.add(numControlPointsSlider.setup("Nb points contrôle", 4, MIN_CONTROL_POINTS, MAX_CONTROL_POINTS));
     gui.add(numPointsSlider.setup("Résolution courbe", 100, 10, 500));
     gui.add(curveThickness.setup("Épaisseur", 2, 1, 10));
+    gui.add(deltaRandomSlider.setup("Delta Random", 2, 1, 10));
     gui.add(showControlPoints.setup("Points contrôle", true));
     gui.add(showControlLines.setup("Lignes contrôle", true));
     gui.add(showBernsteinBasis.setup("Base Bernstein", false));
     gui.add(showStats.setup("Statistiques", true));
     gui.add(riverMode.setup("River Mode", false));
     gui.add(coloredRiver.setup("Colored Mode", false));
-    gui.add(randomRiverMode.setup("Generate Random River Between A and B",false));
+    gui.add(randomCurveAtoB.setup("Generate Random River Between A and B"));
 }
 
 
 void ofApp::update(){
     numSteps = numPointsSlider;
+    deltaRandom = deltaRandomSlider;
     
     // Si le nombre de points change
     if (numControlPoints != (int)numControlPointsSlider) {
         updateControlPoints(numControlPointsSlider);
     }
-    if (randomRiverMode) {
-        genRandomisedRiver();
-        riverGenerated = true;
-    } else {
-        riverGenerated = false;
-        calculateBezierCurve();
+    if (randomCurveAtoB) {
+        genRandomisedCurve();
     }
+    calculateBezierCurve();
+    calculateRiver();
     calculateStats();
 }
 
@@ -118,7 +119,6 @@ void ofApp::draw(){
         drawBernsteinBasis();
     }
 
-
     if (showStats) {
         drawStats();
     }
@@ -136,8 +136,6 @@ void ofApp::calculateBezierCurve() {
         ofVec2f point = BezierMath::calculatePoint(t, controlPoints);
         bezierPoints.push_back(point);
     }
-
-    calculateRiver();
 }
 
 void ofApp::calculateRiver() {
@@ -299,23 +297,20 @@ void ofApp::drawRiver() {
     }
 }
 
-void ofApp::genRandomisedRiver() {
-    if (numControlPoints != 2 or riverGenerated) return;
-    bezierPoints.clear();
-
+void ofApp::genRandomisedCurve() {
     ofVec2f A = controlPoints[0];
-    ofVec2f B = controlPoints[1];
+    ofVec2f B = controlPoints[controlPoints.size()-1];
     vector<ofVec2f> randomControlPoints; // Points de la rivière randomisé courbe de bézier
 
     ofVec2f AB = (B-A);
-    ofVec2f segment = AB/(numRandomRiverPoints+1); // aToB divisé en numRandomRiverPoints segments
+    ofVec2f segment = AB/(numControlPoints+1); // aToB divisé en numRandomRiverPoints segments
 
     randomControlPoints.push_back(A);
-    for (int i = 1; i<numRandomRiverPoints+1; i++) {
+    for (int i = 1; i<numControlPoints+1; i++) {
         ofVec2f randomPoint = A + segment*i;
         ofVec2f normalVector = segment.getRotated(90).getNormalized();
 
-        float maxDist = AB.length() * 1/(numRandomRiverPoints+1);
+        float maxDist = deltaRandom * AB.length() * 1/(numControlPoints+1);
         float randomDist = ofRandom(-maxDist, maxDist);
 
         randomPoint += randomDist*normalVector;
@@ -328,7 +323,7 @@ void ofApp::genRandomisedRiver() {
         ofVec2f point = BezierMath::calculatePoint(t, randomControlPoints);
         bezierPoints.push_back(point);
     }
-    calculateRiver();
+    controlPoints = randomControlPoints;
 }
 
 

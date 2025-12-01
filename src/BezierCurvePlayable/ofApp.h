@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxGui.h"
+#include "/home/clover/Documents/INFO/of_v0.12.1_linux64_gcc6_release/addons/ofxGui/src/ofxGui.h"
 #include "BezierMath.h"
 #include "ofMesh.h"
 
@@ -21,6 +21,7 @@ public:
     int selectedPoint;
     int numSteps;
     int numControlPoints;
+    int deltaRandom;
     ofMesh riverMesh;
     
     void calculateBezierCurve();
@@ -31,7 +32,7 @@ public:
     void drawStats();
     void calculateStats();
     void drawRiver();
-    void genRandomisedRiver();
+    void genRandomisedCurve();
     
     // Statistiques
     float curveLength;
@@ -43,6 +44,7 @@ public:
     ofxPanel gui;
     ofxIntSlider numPointsSlider;
     ofxIntSlider numControlPointsSlider;
+    ofxIntSlider deltaRandomSlider;
     ofxToggle showControlPoints;
     ofxToggle showControlLines;
     ofxToggle showBernsteinBasis;
@@ -50,11 +52,9 @@ public:
     ofxFloatSlider curveThickness;
     ofxToggle riverMode;
     ofxToggle coloredRiver;
-    ofxToggle randomRiverMode;
-    bool riverGenerated = false;
+    ofxButton randomCurveAtoB;
     
     const int MIN_CONTROL_POINTS = 2;
     const int MAX_CONTROL_POINTS = 10;
     float riverWidth = 20.0f;
-    int numRandomRiverPoints = 3;
 };
