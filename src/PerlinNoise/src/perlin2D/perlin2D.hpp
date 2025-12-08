@@ -69,12 +69,18 @@ class Perlin2D{
 
 
 
+        void addNunique(int n);
+        void subNunique(int n);
+        
+
         // =============== setters ===============
 
         void setTheta(int newTheta );
         void setScale(float newScale);
         void setNunique(int newNunique);
         
+
+
 
         // =============== getters ===============
 

@@ -88,6 +88,12 @@ void ofApp::keyPressed(int key){
 
         case 'f':
             ofToggleFullscreen();
+            break;
+        case 'z':
+            perlin->addNunique(15);
+            break;
+        case 's':
+            perlin->subNunique(15);
             break;       
 
         case 'u' : 
@@ -95,6 +101,9 @@ void ofApp::keyPressed(int key){
             break;
         case 'd': 
             perlin->decreaseAmplitude(0.5);
+            break;
+
+        
     }
 }
 

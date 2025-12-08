@@ -24,7 +24,7 @@ void Perlin2D::updateMesh(ofMesh &mesh, int height , int width){
             float nx = x * scale; 
             float ny = y * scale;
             
-            float noiseValue = perlin2D(nx, ny); 
+            float noiseValue = rotatePerlinNoise(nx, ny); 
             
             noiseValue = ofMap(noiseValue, -1, 1, 0, 1);   
             //ofFloatColor c = ofFloatColor(noiseValue, 0.3, 1.0 - noiseValue);
@@ -57,6 +57,15 @@ void Perlin2D::decreaseAmplitude(float value){
 }
 
 
+void Perlin2D::addNunique(int n){
+    nUnique += n;
+    initPermuation();
+}
+void Perlin2D::subNunique(int n){
+    nUnique -= n;
+    initPermuation();
+}
+
 //------------------ setters ------------------
 
 
@@ -87,7 +96,7 @@ void Perlin2D::initPermuation(){
         cellsBase.push_back({(this->randomFloat() - 0.5f ) * 2.0f , (this->randomFloat() - 0.5f) *2.0f });
     }
     cells2D = rotateCells(cellsBase, theta / 360 * 2 * M_PI);
-
+    //cells2D = std::move(cellsBase);
     // --- init perm ---
     perm.resize(nUnique);
     std::iota(perm.begin(), perm.end(), 0);
@@ -141,10 +150,10 @@ float Perlin2D::rotatePerlinNoise(float x , float y){
     std::array<float, 2> g01 = cells2D[X0 + perm[Y1]];
     std::array<float, 2> g11 = cells2D[X1 + perm[Y1]];
     
-    std::array<float , 2> d00 = {x, y};
-    std::array<float, 2> d10 = {x-1, y};
-    std::array<float , 2> d01 = {x, y-1};
-    std::array<float, 2> d11 = {x-1, y-1};
+    std::array<float , 2> d00 = {xf, yf};
+    std::array<float, 2> d10 = {xf-1, yf};
+    std::array<float , 2> d01 = {xf, yf-1};
+    std::array<float, 2> d11 = {xf-1, yf-1};
 
     
     float in00 = dot(g00, d00);
@@ -152,10 +161,10 @@ float Perlin2D::rotatePerlinNoise(float x , float y){
     float in01 = dot(g01, d01);
     float in11 = dot(g11, d11);
     
-    float l1 = lerp(in00, in10,fade(x));
-    float l2 = lerp(in01, in11, fade(x));
+    float l1 = lerp(in00, in10,fade(xf));
+    float l2 = lerp(in01, in11, fade(xf));
     
-    return lerp(l1, l2, fade(y)) + 0.5;
+    return lerp(l1, l2, fade(yf)) + 0.5;
 }
 
 
