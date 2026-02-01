@@ -2,9 +2,11 @@
 #define OF_APP_HPP
 
 
-
 #include "ofMain.h"
+#include "ofxGui.h"
+
 #include "perlin2D/perlin2D.hpp"
+
 #include "random"
 #include <memory>
 #include <fstream>
