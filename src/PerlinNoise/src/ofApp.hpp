@@ -4,13 +4,14 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
-
+#include "ofMesh.h"
 #include "perlin2D/perlin2D.hpp"
 
 #include "random"
 #include <memory>
 #include <fstream>
 #include <iostream>
+#include <string>
 
 
 
@@ -25,10 +26,17 @@ public:
     void keyReleased(int key);
     
     
-    // make a new mesh object
+    
     ofMesh mainMesh;
     ofEasyCam mainCam;
     int width, height;
+
+    
+
+    // gui 
+    ofxPanel gui;
+    ofxLabel infoLabel;
+    ofxFloatSlider theta;
 
 private:
 

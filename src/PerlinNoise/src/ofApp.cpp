@@ -6,13 +6,20 @@
 void ofApp::setup(){
     perlin = std::make_unique<Perlin2D>(0.02,250, 13.0);
     
+
+    gui.setup();
+    //infoLabel.setup("controls", "gfesf");
+    gui.setSize(300, 500);
+    gui.add(infoLabel.setup("controls", 
+        " u/d : increase/decrease Amplitude \n"));
+    gui.add(theta.setup("rotation", 140, 10, 360));
     mainMesh.setMode(OF_PRIMITIVE_TRIANGLES);
 
     
     
     ofEnableDepthTest();
     
-    //set the width and height for our mesh and initial rendering values
+    
     width = 500;
     height = 500;
     ofBackground(0);
@@ -20,9 +27,7 @@ void ofApp::setup(){
 
     for (int y = 0; y < height; y++){
         for (int x = 0; x < width; x++){
-            float cx = x - width  * 0.5f;
-            float cy = y - height * 0.5f;
-            mainMesh.addVertex(glm::vec3(cx, cy, 0));
+            mainMesh.addVertex(glm::vec3(x - width  * 0.5f, y - height * 0.5f, 0));
             mainMesh.addColor(ofFloatColor(1.0)); 
         }
     }
@@ -30,23 +35,15 @@ void ofApp::setup(){
     
     for(int y = 0; y < height - 1; y++){
         for(int x = 0; x < width - 1; x++){
-
-            int i1 =  x      +  y      * width;
-            int i2 = (x + 1) +  y      * width;
-            int i3 =  x      + (y + 1) * width;
-            int i4 = (x + 1) + (y + 1) * width;            
-            mainMesh.addIndex(i1);
-            mainMesh.addIndex(i2);
-            mainMesh.addIndex(i3);
-            mainMesh.addIndex(i2);
-            mainMesh.addIndex(i4);
-            mainMesh.addIndex(i3);
+      
+            mainMesh.addIndex(x+y* width);
+            mainMesh.addIndex((x+ 1) + y*width);
+            mainMesh.addIndex(x+ (y + 1)*width);
+            mainMesh.addIndex((x + 1) +y*width);
+            mainMesh.addIndex((x + 1) + (y + 1) *width);
+            mainMesh.addIndex(x+ (y + 1) *width);
         }
     }
-
-  
-
-    
     mainCam.setPosition(0, 0, 600);
     mainCam.lookAt(glm::vec3(0,0,0));
 
@@ -56,16 +53,6 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     perlin->updateMesh(mainMesh, height, width );
-    
-    // for (int y = 0 ; y < height; y ++){
-    //     for (int x = 0 ; x < width; x ++){
-    //         int index = x + y * width;
-    //         ofVec3f v = mainMesh.getVertex(index);
-
-
-    //     }
-    // }
-    //computeNormals(mainMesh);
     
 }
 
@@ -79,6 +66,8 @@ void ofApp::draw(){
     mainCam.begin();
     mainMesh.draw();
     mainCam.end();
+    //ofDisableDepthTest();
+    gui.draw();
 }
 
 //--------------------------------------------------------------
@@ -88,14 +77,7 @@ void ofApp::keyPressed(int key){
 
         case 'f':
             ofToggleFullscreen();
-            break;
-        case 'z':
-            perlin->addNunique(15);
-            break;
-        case 's':
-            perlin->subNunique(15);
-            break;       
-
+            break;   
         case 'u' : 
             perlin->increaseAmplitude(0.5);
             break;
