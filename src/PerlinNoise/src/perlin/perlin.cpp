@@ -1,0 +1,49 @@
+
+
+#include "perlin.hpp"
+
+
+// ============ Perlin class ============ 
+
+
+// ========= private =========
+
+
+
+// ========= protected =========
+
+float Perlin::lerp(float a, float b, float t) {
+    return ((1-t) * a) + (t * b);
+}
+
+
+
+float Perlin::fade(float t) {
+    return t * t * t * (t * (t * 6 - 15) + 10);
+    //return t;
+}
+
+float Perlin::randomFloat(){
+ 
+    return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+
+    // float ran =  (float)(rand()) / (float)(rand());
+    // return abs((int)floor(ran) - ran );
+}
+
+
+
+// ========= public =========
+Perlin::Perlin(float initScale , int nUnique) : scale(initScale) , nUnique(nUnique) {
+    
+}
+
+
+void Perlin::setScale(float newScale){
+    scale = newScale;
+}
+void Perlin::setNunique(int newNunique){
+    nUnique = newNunique;
+}
+
+

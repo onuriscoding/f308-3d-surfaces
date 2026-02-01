@@ -5,20 +5,22 @@
 #include "random"
 #include "cmath"
 #include "vector"
+#include "../perlin/perlin.hpp"
 
 
 /**
 class that handles the Perlin Noise algorithm for a 2D representation
 **/
-class Perlin2D{
+class Perlin2D : public Perlin{
 
 
     private:
 
         // scale of the representaiton
-        float scale; 
+        //float scale; 
         //noise that repeats every nUnique units
-        int nUnique;
+        //int nUnique;
+
         // use as rotation value 
         int theta;
         // amplitude of the representaiton
@@ -34,7 +36,7 @@ class Perlin2D{
         /*
         brief : return a weighted average 
         */
-        float lerp(float a, float b, float t);
+        //float lerp(float a, float b, float t);
         
 
         /*
@@ -47,7 +49,7 @@ class Perlin2D{
         brief : This allows the value of the coordinates to be smoothed so that they gradually approach integer values.
         param t :  coordinate axis (x or y) 
         */
-        float fade(float t);
+        //float fade(float t);
         
         /*
         brief : rotates a specifics gradiant vecotor
@@ -63,10 +65,7 @@ class Perlin2D{
         */
         float dot(std::array<float , 2>& vect1, std::array<float , 2> & vect2);
         
-        /*
-        brief :generates a random float
-        */
-        float randomFloat();
+       
 
 
         void initPermuation();

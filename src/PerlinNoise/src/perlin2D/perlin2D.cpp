@@ -9,7 +9,7 @@
 
 
 // ------- constructor ------- 
-Perlin2D::Perlin2D(float initScale , int nUnique, int theta) : scale(initScale) , nUnique(nUnique), theta(theta), amplitude(10.0) {
+Perlin2D::Perlin2D(float initScale , int nUnique, int theta) : Perlin(initScale, nUnique), theta(theta), amplitude(10.0) {
     initPermuation();
 }
 
@@ -59,12 +59,7 @@ void Perlin2D::decreaseAmplitude(float value){
 void Perlin2D::setTheta(int newTheta ){
     theta = newTheta;
 }
-void Perlin2D::setScale(float newScale){
-    scale = newScale;
-}
-void Perlin2D::setNunique(int newNunique){
-    nUnique = newNunique;
-}
+
 
 //------------------ getters ------------------
 
@@ -104,10 +99,7 @@ std::array<float , 2> Perlin2D::rotate(std::array<float, 2>& vect, int theta){
 
 
 
-float Perlin2D::fade(float t) {
-    return t * t * t * (t * (t * 6 - 15) + 10);
-    //return t;
-}
+
 
 
 float Perlin2D::noise2D(float x , float y){
@@ -150,20 +142,9 @@ float Perlin2D::noise2D(float x , float y){
 }
 
 
-float Perlin2D::lerp(float a, float b, float t) {
-    
-    return ((1-t) * a) + (t * b);
-}
 
 float Perlin2D::dot(std::array<float , 2>& vect1, std::array<float , 2> & vect2){
     return vect1[0] * vect2[0] + vect1[1] * vect2[1];
 }
 
 
-float Perlin2D::randomFloat(){
- 
-    return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-
-    // float ran =  (float)(rand()) / (float)(rand());
-    // return abs((int)floor(ran) - ran );
-}
