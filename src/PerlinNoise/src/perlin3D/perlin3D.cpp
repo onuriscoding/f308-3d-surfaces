@@ -63,16 +63,19 @@ float Perlin3D::noise3D(float x, float y , float z){
     int Y1 = (Y + 1) % nUnique;
     int Z1 = (Z + 1) % nUnique;
 
-    std::array<float, 3> g000 = cells2D[X0 + perm[Y0] + perm[Z0] ];
-    std::array<float, 3> g100 = cells2D[X1 + perm[Y0] + perm[Z0]];
-    std::array<float, 3> g010 = cells2D[X0 + perm[Y1] + perm[Z0]];
-    std::array<float, 3> g110 = cells2D[X1 + perm[Y1] + perm[Z0]];
+    std::array<float, 3> g000 = cells3D[X0 + perm[Y0] + perm[Z0] ];
+    std::array<float, 3> g100 = cells3D[X1 + perm[Y0] + perm[Z0]];
+    std::array<float, 3> g010 = cells3D[X0 + perm[Y1] + perm[Z0]];
+    std::array<float, 3> g110 = cells3D[X1 + perm[Y1] + perm[Z0]];
 
 
-    std::array<float, 3> g001 = cells2D[X0 + perm[Y0] + perm[Z1]];
-    std::array<float, 3> g101 = cells2D[X1 + perm[Y0]+ perm[Z1]];
-    std::array<float, 3> g011 = cells2D[X0 + perm[Y1]+ perm[Z1]];
-    std::array<float, 3> g111 = cells2D[X1 + perm[Y1]+ perm[Z1]];
+    std::array<float, 3> g001 = cells3D[X0 + perm[Y0] + perm[Z1]];
+    std::array<float, 3> g101 = cells3D[X1 + perm[Y0]+ perm[Z1]];
+    std::array<float, 3> g011 = cells3D[X0 + perm[Y1]+ perm[Z1]];
+    std::array<float, 3> g111 = cells3D[X1 + perm[Y1]+ perm[Z1]];
+
+
+    return 10.2f;
 }
 
 

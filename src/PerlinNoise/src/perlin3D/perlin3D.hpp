@@ -44,7 +44,7 @@ class Perlin3D : public Perlin {
 
 
 
-}
+};
 
 
 
