@@ -52,17 +52,25 @@ void Perlin2D::decreaseAmplitude(float value){
 }
 
 
+void Perlin2D::updateRotation(float updatedTheta){
+    theta = updatedTheta;
+    cells2D = rotateCells(cells2D, theta/ 360*2 * M_PI);
+
+}
+
+
 
 //------------------ setters ------------------
 
 
-void Perlin2D::setTheta(int newTheta ){
-    theta = newTheta;
-}
 
 
 //------------------ getters ------------------
 
+
+float Perlin2D::getTheta(){
+    return theta;
+}
 
 // ================ private ================
 

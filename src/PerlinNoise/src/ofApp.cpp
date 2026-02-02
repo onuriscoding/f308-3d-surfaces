@@ -12,7 +12,7 @@ void ofApp::setup(){
     gui.setSize(300, 500);
     gui.add(infoLabel.setup("controls", 
         " u/d : increase/decrease Amplitude \n"));
-    gui.add(theta.setup("rotation", 140, 10, 360));
+    gui.add(theta.setup("rotation", 140, 0, 360));
     mainMesh.setMode(OF_PRIMITIVE_TRIANGLES);
 
     
@@ -52,7 +52,25 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    if(ofGetMousePressed() && theta.getShape().inside(ofGetMouseX(), ofGetMouseY())){
+        draggingSlider = true;
+    }
+
+    if(draggingSlider && !ofGetMousePressed()){
+        draggingSlider = false;
+        perlin->updateRotation(theta);
+    }
+    // std::cout << "slider theta : " << theta << " / perlin theta : " << perlin->getTheta() << std::endl; 
+    // if(theta != perlin->getTheta()){
+        
+    //     perlin->updateRotation(theta);
+    // }
+
     perlin->updateMesh(mainMesh, height, width );
+
+   
+    
+    
     
 }
 
@@ -61,12 +79,12 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
+    ofEnableDepthTest();
     glPointSize(5);
     mainCam.begin();
     mainMesh.draw();
     mainCam.end();
-    //ofDisableDepthTest();
+    ofDisableDepthTest();
     gui.draw();
 }
 

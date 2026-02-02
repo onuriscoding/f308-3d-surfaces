@@ -84,7 +84,7 @@ class Perlin2D : public Perlin{
         */
         void updateMesh(ofMesh &mesh, int height , int width);
 
-
+        void updateRotation(float updatedTheta);
 
         void increaseAmplitude(float value);
         void decreaseAmplitude(float value);
@@ -97,14 +97,12 @@ class Perlin2D : public Perlin{
 
         // =============== setters ===============
 
-        void setTheta(int newTheta );
-        void setScale(float newScale);
-        void setNunique(int newNunique);
-        
 
 
 
         // =============== getters ===============
+
+        float getTheta() ; 
 
 };
 

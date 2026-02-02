@@ -36,11 +36,12 @@ public:
     // gui 
     ofxPanel gui;
     ofxLabel infoLabel;
-    ofxFloatSlider theta;
+    ofxIntSlider theta;
 
 private:
 
     std::unique_ptr<Perlin2D> perlin;
+    bool draggingSlider;
     
 
 };
