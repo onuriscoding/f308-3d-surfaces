@@ -2,9 +2,14 @@
 
 
 
-
+// ===== public ===== 
 void ofApp::setup(){
-    perlin = std::make_unique<Perlin2D>(0.02,250, 13.0);
+    height2D = 500;
+    width2D = 500;
+    size3D = 60;
+    float spacing = 10.0f;
+    perlin2D = std::make_unique<Perlin2D>(0.02,250, 13.0);
+    perlin3D = std::make_unique<Perlin3D>(0.08, 250);
     
 
     gui.setup();
@@ -13,37 +18,25 @@ void ofApp::setup(){
     gui.add(infoLabel.setup("controls", 
         " u/d : increase/decrease Amplitude \n"));
     gui.add(theta.setup("rotation", 140, 0, 360));
-    mainMesh.setMode(OF_PRIMITIVE_TRIANGLES);
+    mesh2D.setMode(OF_PRIMITIVE_TRIANGLES);
 
     
     
     ofEnableDepthTest();
     
+
+    // -- init meshs -- 
+    initMesh2D();
+    initMesh3D();
+
+
     
-    width = 500;
-    height = 500;
+    
+    
     ofBackground(0);
     ofSetColor(255);
 
-    for (int y = 0; y < height; y++){
-        for (int x = 0; x < width; x++){
-            mainMesh.addVertex(glm::vec3(x - width  * 0.5f, y - height * 0.5f, 0));
-            mainMesh.addColor(ofFloatColor(1.0)); 
-        }
-    }
-
-    
-    for(int y = 0; y < height - 1; y++){
-        for(int x = 0; x < width - 1; x++){
-      
-            mainMesh.addIndex(x+y* width);
-            mainMesh.addIndex((x+ 1) + y*width);
-            mainMesh.addIndex(x+ (y + 1)*width);
-            mainMesh.addIndex((x + 1) +y*width);
-            mainMesh.addIndex((x + 1) + (y + 1) *width);
-            mainMesh.addIndex(x+ (y + 1) *width);
-        }
-    }
+   
     mainCam.setPosition(0, 0, 600);
     mainCam.lookAt(glm::vec3(0,0,0));
 
@@ -58,15 +51,11 @@ void ofApp::update(){
 
     if(draggingSlider && !ofGetMousePressed()){
         draggingSlider = false;
-        perlin->updateRotation(theta);
+        perlin2D->updateRotation(theta);
     }
-    // std::cout << "slider theta : " << theta << " / perlin theta : " << perlin->getTheta() << std::endl; 
-    // if(theta != perlin->getTheta()){
-        
-    //     perlin->updateRotation(theta);
-    // }
 
-    perlin->updateMesh(mainMesh, height, width );
+    perlin2D->updateMesh(mesh2D, height2D, width2D );
+    //perlin3D->updateMesh(mesh3D);
 
    
     
@@ -82,7 +71,8 @@ void ofApp::draw(){
     ofEnableDepthTest();
     glPointSize(5);
     mainCam.begin();
-    mainMesh.draw();
+    mesh2D.draw();
+    //mesh3D.draw();
     mainCam.end();
     ofDisableDepthTest();
     gui.draw();
@@ -97,10 +87,10 @@ void ofApp::keyPressed(int key){
             ofToggleFullscreen();
             break;   
         case 'u' : 
-            perlin->increaseAmplitude(0.5);
+            perlin2D->increaseAmplitude(0.5);
             break;
         case 'd': 
-            perlin->decreaseAmplitude(0.5);
+            perlin2D->decreaseAmplitude(0.5);
             break;
 
         
@@ -112,3 +102,48 @@ void ofApp::keyReleased(int key){
     
 }
 
+// ====== private ======
+
+
+void ofApp::initMesh2D(){
+    for (int y = 0; y < height2D; y++){
+        for (int x = 0; x < width2D; x++){
+            mesh2D.addVertex(glm::vec3(x - width2D  * 0.5f, y - height2D * 0.5f, 0));
+            mesh2D.addColor(ofFloatColor(1.0)); 
+        }
+    }
+
+    
+    for(int y = 0; y < height2D - 1; y++){
+        for(int x = 0; x < width2D - 1; x++){
+      
+            mesh2D.addIndex(x+y* width2D);
+            mesh2D.addIndex((x+ 1) + y*width2D);
+            mesh2D.addIndex(x+ (y + 1)*width2D);
+            mesh2D.addIndex((x + 1) +y*width2D);
+            mesh2D.addIndex((x + 1) + (y + 1) *width2D);
+            mesh2D.addIndex(x+ (y + 1) *width2D);
+        }
+    }
+    
+
+}
+
+
+void ofApp::initMesh3D(){
+    ofEnableAlphaBlending();
+    glPointSize(3);
+    mesh3D.setMode(OF_PRIMITIVE_POINTS);
+    for (int z = 0 ; z < size3D; z ++){
+        for (int y = 0 ; y < size3D; y ++){
+            for (int x = 0; x < size3D; x ++){
+                // ofVec3f vec((x - size3D / 2 )* spacing, (y - size3D / 2 )* spacing , (z - size3D / 2 )* spacing );
+                ofVec3f vec(x , y , z  );
+                mesh3D.addVertex(vec);
+                mesh3D.addColor(ofFloatColor(0, 0, 0, 0));
+
+            } 
+        }
+    }
+
+}

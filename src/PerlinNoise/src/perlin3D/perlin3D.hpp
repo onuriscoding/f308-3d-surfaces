@@ -1,7 +1,7 @@
 #ifndef PERLIN_3D_HPP
 #define PERLIN_3D_HPP
 
-#include "../perlin/perlin.hpp"
+#include "../perlin2D/perlin2D.hpp"
 
 
 

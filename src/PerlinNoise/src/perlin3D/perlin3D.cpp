@@ -40,7 +40,13 @@ std::vector<std::array<float , 3>> Perlin3D::rotateCells(std::vector< std::array
     return res;
 }
 
-  
+
+
+float Perlin3D::dot(std::array<float , 3>& vect1, std::array<float , 3> & vect2){
+    return vect1[0] * vect2[0] + vect1[1] * vect2[1] + vect1[2] * vect2[2];
+}
+
+
 
 float Perlin3D::noise3D(float x, float y , float z){
      // position without the unit space.
@@ -75,7 +81,36 @@ float Perlin3D::noise3D(float x, float y , float z){
     std::array<float, 3> g111 = cells3D[X1 + perm[Y1]+ perm[Z1]];
 
 
-    return 10.2f;
+    std::array<float, 3> d000 = {xf, yf, zf};
+    std::array<float, 3> d100 = {xf-1, yf, zf};
+    std::array<float, 3> d010 = {xf, yf-1, zf};
+    std::array<float, 3> d110 = {xf-1, yf-1, zf};
+
+
+    std::array<float, 3> d001 = {xf, yf, zf -1};
+    std::array<float, 3> d101 = {xf-1, yf, zf-1};
+    std::array<float, 3> d011 = {xf, yf-1, zf-1};
+    std::array<float, 3> d111 = {xf-1, yf-1, zf-1};
+
+    float in000 = dot(g000, d000);
+    float in100 = dot(g100, d100);
+    float in010 = dot(g010, d010);
+    float in110 = dot(g110, d110);
+
+
+
+    float in001 = dot(g001, d001);
+    float in101 = dot(g101, d101);
+    float in011 = dot(g011, d011);
+    float in111 = dot(g111, d111);
+
+
+    float t1 = lerp(lerp(in000, in100,fade(xf)), lerp(in010, in110, fade(xf)), fade(yf));
+    float t2 = lerp(lerp(in001, in101, fade(xf)), lerp(in011, in111, fade(xf)), fade(yf));
+
+    return lerp(t1, t2, fade(zf));
+
+
 }
 
 
@@ -86,5 +121,16 @@ Perlin3D::Perlin3D(float initScale, int nUnique): Perlin(initScale, nUnique){
     this->initPermutation();
 }
 void Perlin3D::updateMesh(ofMesh &mesh ){
+    for (int i = 0; i < mesh.getNumVertices(); i++){
+        ofVec3f vec = mesh.getVertex(i);
+        float noiseValue = noise3D(vec.x * scale, vec.y * scale, vec.z * scale);
+        // todo move 
+        float sill = 0.45;
+        float st = ofMap(noiseValue, sill, 1.0, 0.0,1.0, true);
 
+        ofFloatColor col;
+        col.setHsb(ofMap(noiseValue, 0, 1, 0.6, 0.95), 0.8,1.0,st);
+        mesh.setColor(i, col);
+
+    }
 }

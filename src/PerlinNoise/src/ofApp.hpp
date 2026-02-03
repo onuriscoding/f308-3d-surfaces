@@ -6,6 +6,7 @@
 #include "ofxGui.h"
 #include "ofMesh.h"
 #include "perlin2D/perlin2D.hpp"
+#include "perlin3D/perlin3D.hpp"
 
 #include "random"
 #include <memory>
@@ -27,9 +28,12 @@ public:
     
     
     
-    ofMesh mainMesh;
+    ofMesh mesh2D;
+    ofMesh mesh3D;
     ofEasyCam mainCam;
-    int width, height;
+    int width2D, height2D;
+    int size3D;
+    float spacing;
 
     
 
@@ -40,8 +44,13 @@ public:
 
 private:
 
-    std::unique_ptr<Perlin2D> perlin;
+    std::unique_ptr<Perlin2D> perlin2D;
+    std::unique_ptr<Perlin3D> perlin3D;
     bool draggingSlider;
+
+
+    void initMesh2D();
+    void initMesh3D();
     
 
 };
