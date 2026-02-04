@@ -1,0 +1,60 @@
+\documentclass{Template}
+
+\sceau{Images/sceauULB.jpg}
+
+%\usepackage{fancyhdr}            % Permet la personnalisation des en-têtes. Voir la section en-tête ci-dessous.
+\usepackage{titlesec} % Permet de modifier le formatage des sections
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tabularx}
+\usepackage[backend-biber, style=authoryear]{biblatex}
+\definecolor{gray75}{gray}{0.75}
+
+% Configuration de titlesec pour aligner le numéro du chapitre et le titre
+\titleformat{\chapter}[block]
+  {\normalfont\huge\bfseries}{\thechapter}{1em}{}
+
+%\fancypagestyle{empty}{
+%    \lhead{}
+ %   \fancyhead[R]{\thepage}
+  %  \fancyhead[L]{}
+   % \renewcommand{\headrulewidth}{0pt}
+   % \fancyfoot{}
+%}
+
+\makeatletter
+\renewcommand{\@chapapp}{}
+\makeatother
+
+
+\usepackage[parfill]{parskip}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\newcommand{\hsp}{\hspace{20pt}}
+\addbibresource{chapitres/references.bib}
+\begin{document}
+
+\thispagestyle{empty}
+\titleULB{
+	title={\textbf{\textsc{\Huge Génération et modélisation de surfaces 3d}}},
+	course={\Large Projet d'année \\ INFO-F309},
+	author={\textit{Auteurs}  Ibrahim DOGAN\\ Juliette CORNU-BESSER\\ Quentin BERNARD-BOUISSIERES \\ Daniel DEFOING\\ Haluk YILMAZ},
+	teacher={\textit{Matricule}  \\ 000586544 \\ 000581723 \\ 000572078 \\ \  },
+	date={Année Académique 2025-2026},
+	logo={Images/LOGO_Universite__libre_bruxelles.png},
+	manyAuthor
+}
+
+\clearpage\pagestyle{plain}
+\tableofcontents
+%\input{} chapitres
+
+\clearpage\pagestyle{fancy}
+
+\input{chapitres/courbes.tex}
+\input{chapitres/surfaces.tex}
+\input{chapitres/bibliographie.tex}
+
+\end{document}
