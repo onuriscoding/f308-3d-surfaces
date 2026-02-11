@@ -6,13 +6,19 @@
 
 void Perlin3D::initPermutation(){
     //init cells3D
-    std::vector<std::array<float, 3>> cellsBase ;
-    for (int i = 0; i < nUnique * 2 ; i ++){
-        cellsBase.push_back({(this->randomFloat() - 0.5f ) * 2.0f , (this->randomFloat() - 0.5f) *2.0f, (this->randomFloat() - 0.5f) *2.0f});
+    // std::vector<std::array<float, 3>> cellsBase ;
+    // for (int i = 0; i < nUnique  ; i ++){
+    //     cellsBase.push_back({(this->randomFloat() - 0.5f ) * 2.0f , (this->randomFloat() - 0.5f) *2.0f, (this->randomFloat() - 0.5f) *2.0f});
+    // }
+
+    for (int i = 0; i < nUnique* 2; i++) {
+        ofVec3f g( randomFloat()*2-1, randomFloat()*2-1, randomFloat()*2-1);
+        g.normalize();
+        cells3D.push_back({g.x, g.y, g.z});
     }
 
 
-    cells3D = rotateCells(cellsBase, theta / 360 * 2 * M_PI);
+    //cells3D = rotateCells(cellsBase, theta / 360 * 2 * M_PI);
     
     //init perm
     perm.resize(nUnique);
@@ -20,6 +26,10 @@ void Perlin3D::initPermutation(){
     static std::mt19937 rng(std::time(nullptr));
     std::shuffle(perm.begin(), perm.end(), rng);
 
+    perm.resize(nUnique*2);
+    for (int i = 0 ; i < nUnique ; i ++ ){
+        perm[nUnique + i] = perm[i];
+    }
 
 }
 
@@ -61,37 +71,58 @@ float Perlin3D::noise3D(float x, float y , float z){
     
 
 
-    int X0 = X% nUnique;
-    int Y0 = Y% nUnique;
-    int Z0 = Z% nUnique;
+    // int X0 = X% nUnique;
+    // int Y0 = Y% nUnique;
+    // int Z0 = Z% nUnique;
 
-    int X1 = (X + 1) % nUnique;
-    int Y1 = (Y + 1) % nUnique;
-    int Z1 = (Z + 1) % nUnique;
+    // int X1 = (X + 1) % nUnique;
+    // int Y1 = (Y + 1) % nUnique;
+    // int Z1 = (Z + 1) % nUnique;
 
-    std::array<float, 3> g000 = cells3D[X0 + perm[Y0] + perm[Z0] ];
-    std::array<float, 3> g100 = cells3D[X1 + perm[Y0] + perm[Z0]];
-    std::array<float, 3> g010 = cells3D[X0 + perm[Y1] + perm[Z0]];
-    std::array<float, 3> g110 = cells3D[X1 + perm[Y1] + perm[Z0]];
-
-
-    std::array<float, 3> g001 = cells3D[X0 + perm[Y0] + perm[Z1]];
-    std::array<float, 3> g101 = cells3D[X1 + perm[Y0]+ perm[Z1]];
-    std::array<float, 3> g011 = cells3D[X0 + perm[Y1]+ perm[Z1]];
-    std::array<float, 3> g111 = cells3D[X1 + perm[Y1]+ perm[Z1]];
+    // std::array<float, 3> g000 = cells3D[perm[X0 + perm[Y0+ perm[Z0]]] ];
+    // std::array<float, 3> g100 = cells3D[perm[X1 + perm[Y0+ perm[Z0]]] ];
+    // std::array<float, 3> g010 = cells3D[perm[X0 + perm[Y1+ perm[Z0]]] ];
+    // std::array<float, 3> g110 = cells3D[perm[X1 + perm[Y1+ perm[Z0]]] ];
 
 
+    // std::array<float, 3> g001 = cells3D[perm[X0 + perm[Y0+ perm[Z1]]]];
+    // std::array<float, 3> g101 = cells3D[perm[X1 + perm[Y0+ perm[Z1]]]];
+    // std::array<float, 3> g011 = cells3D[perm[X0 + perm[Y1+ perm[Z1]]]];
+    // std::array<float, 3> g111 = cells3D[perm[X1 + perm[Y1+ perm[Z1]]]];
+
+
+   
+    int A = perm[X] + Y;
+    int AA = perm[A] + Z;
+    int AB = perm[A + 1] + Z;
+    int B = perm[X + 1] + Y;
+    int BA = perm[B] + Z;
+    int BB = perm[B + 1] + Z;
+
+    
+    std::array<float, 3> g000 = cells3D[perm[AA]];
+    std::array<float, 3> g100 = cells3D[perm[BA]];
+    std::array<float, 3> g010 = cells3D[perm[AB]];
+    std::array<float, 3> g110 = cells3D[perm[BB]];
+
+    std::array<float , 3> g001 = cells3D[perm[AA + 1]];
+    std::array<float , 3> g101 = cells3D[perm[BA + 1]];
+    std::array<float , 3> g011 = cells3D[perm[AB + 1]];
+    std::array<float , 3> g111 = cells3D[perm[BB + 1]];
+
+    
     std::array<float, 3> d000 = {xf, yf, zf};
     std::array<float, 3> d100 = {xf-1, yf, zf};
     std::array<float, 3> d010 = {xf, yf-1, zf};
     std::array<float, 3> d110 = {xf-1, yf-1, zf};
-
 
     std::array<float, 3> d001 = {xf, yf, zf -1};
     std::array<float, 3> d101 = {xf-1, yf, zf-1};
     std::array<float, 3> d011 = {xf, yf-1, zf-1};
     std::array<float, 3> d111 = {xf-1, yf-1, zf-1};
 
+
+    
     float in000 = dot(g000, d000);
     float in100 = dot(g100, d100);
     float in010 = dot(g010, d010);
@@ -104,11 +135,11 @@ float Perlin3D::noise3D(float x, float y , float z){
     float in011 = dot(g011, d011);
     float in111 = dot(g111, d111);
 
-
     float t1 = lerp(lerp(in000, in100,fade(xf)), lerp(in010, in110, fade(xf)), fade(yf));
     float t2 = lerp(lerp(in001, in101, fade(xf)), lerp(in011, in111, fade(xf)), fade(yf));
 
     return lerp(t1, t2, fade(zf));
+
 
 
 }
@@ -121,11 +152,14 @@ Perlin3D::Perlin3D(float initScale, int nUnique): Perlin(initScale, nUnique){
     this->initPermutation();
 }
 void Perlin3D::updateMesh(ofMesh &mesh ){
+    
     for (int i = 0; i < mesh.getNumVertices(); i++){
         ofVec3f vec = mesh.getVertex(i);
-        float noiseValue = noise3D(vec.x * scale, vec.y * scale, vec.z * scale);
+        //std::cout << "index : " << i << std::endl;
+        //std::cout << "coordinate : " << vec.x * scale << " , " << vec.y*scale << " , " << vec.z * scale << " ; no : "<<vec.x << " , " << vec.y << " , " << vec.z<<  std::endl;
+        float noiseValue = noise3D(vec.x * scale, vec.y * scale , vec.z * scale );
         // todo move 
-        float sill = 0.45;
+        float sill = 0.20;
         float st = ofMap(noiseValue, sill, 1.0, 0.0,1.0, true);
 
         ofFloatColor col;

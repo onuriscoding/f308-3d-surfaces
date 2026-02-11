@@ -6,11 +6,13 @@
 void ofApp::setup(){
     height2D = 500;
     width2D = 500;
-    size3D = 60;
-    float spacing = 10.0f;
+    size3D = 80;
+    spacing = 3.0f;
     perlin2D = std::make_unique<Perlin2D>(0.02,250, 13.0);
-    perlin3D = std::make_unique<Perlin3D>(0.08, 250);
+    perlin3D = std::make_unique<Perlin3D>(0.02, 256);
     
+    // --- gui setup ---
+
 
     gui.setup();
     //infoLabel.setup("controls", "gfesf");
@@ -18,6 +20,11 @@ void ofApp::setup(){
     gui.add(infoLabel.setup("controls", 
         " u/d : increase/decrease Amplitude \n"));
     gui.add(theta.setup("rotation", 140, 0, 360));
+    gui.add(renderPerlin3D.setup("render 3D Perlin noise", true));
+    gui.add(newGeneration.setup("new noise generation "));
+
+
+
     mesh2D.setMode(OF_PRIMITIVE_TRIANGLES);
 
     
@@ -45,21 +52,26 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    if(ofGetMousePressed() && theta.getShape().inside(ofGetMouseX(), ofGetMouseY())){
-        draggingSlider = true;
+    if (renderPerlin3D){
+        perlin3D->updateMesh(mesh3D);
+
     }
+    else {
 
-    if(draggingSlider && !ofGetMousePressed()){
-        draggingSlider = false;
-        perlin2D->updateRotation(theta);
+
+        if(ofGetMousePressed() && theta.getShape().inside(ofGetMouseX(), ofGetMouseY())){
+            draggingSlider = true;
+        }
+
+        if(draggingSlider && !ofGetMousePressed()){
+            draggingSlider = false;
+            perlin2D->updateRotation(theta);
+        }
+
+        perlin2D->updateMesh(mesh2D, height2D, width2D );
     }
-
-    perlin2D->updateMesh(mesh2D, height2D, width2D );
-    //perlin3D->updateMesh(mesh3D);
-
-   
     
-    
+
     
 }
 
@@ -68,15 +80,35 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    if (renderPerlin3D){
+        drawPerlin3D();
+    }else {
+        drawPerlin2D();
+    }
+    gui.draw();
+}
+
+void ofApp::drawPerlin3D(){
+    ofEnableDepthTest();
+    glPointSize(5);
+    glDepthMask(GL_FALSE);
+    mainCam.begin();
+    mesh3D.draw();
+    glDepthMask(GL_TRUE); 
+    mainCam.end();
+    ofDisableDepthTest();
+}
+
+void ofApp::drawPerlin2D(){
     ofEnableDepthTest();
     glPointSize(5);
     mainCam.begin();
     mesh2D.draw();
-    //mesh3D.draw();
     mainCam.end();
     ofDisableDepthTest();
-    gui.draw();
 }
+
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -137,8 +169,7 @@ void ofApp::initMesh3D(){
     for (int z = 0 ; z < size3D; z ++){
         for (int y = 0 ; y < size3D; y ++){
             for (int x = 0; x < size3D; x ++){
-                // ofVec3f vec((x - size3D / 2 )* spacing, (y - size3D / 2 )* spacing , (z - size3D / 2 )* spacing );
-                ofVec3f vec(x , y , z  );
+                ofVec3f vec((x - size3D / 2 )* spacing, (y - size3D / 2 )* spacing , (z - size3D / 2 )* spacing );
                 mesh3D.addVertex(vec);
                 mesh3D.addColor(ofFloatColor(0, 0, 0, 0));
 

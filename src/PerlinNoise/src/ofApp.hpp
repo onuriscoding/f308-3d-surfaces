@@ -5,7 +5,7 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofMesh.h"
-#include "perlin2D/perlin2D.hpp"
+
 #include "perlin3D/perlin3D.hpp"
 
 #include "random"
@@ -21,6 +21,9 @@ public:
     void setup();
     void update();
     void draw();
+
+    void drawPerlin3D();
+    void drawPerlin2D();
     
     void computeNormals(ofMesh &mesh);
     void keyPressed(int key);
@@ -41,6 +44,8 @@ public:
     ofxPanel gui;
     ofxLabel infoLabel;
     ofxIntSlider theta;
+    ofxToggle renderPerlin3D;
+    ofxButton newGeneration;
 
 private:
 
