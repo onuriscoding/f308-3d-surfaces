@@ -34,11 +34,11 @@ void Perlin3D::initPermutation(){
 }
 
 
-std::array<float , 3> Perlin3D::rotate(std::array<float, 3>& vect, int theta){
-
-    float c = std::cos(theta);
-    float s = std::sin(theta);
-    return {c* vect[0] - s* vect[1], s * vect[0] - c * vect[1], vect[2]};
+std::array<float , 3> Perlin3D::rotate(std::array<float, 3>& vect, float theta){
+    float thetaRad = theta * (2.0f * M_PI / 360.0f);
+    float c = std::cos(thetaRad);
+    float s = std::sin(thetaRad);
+    return {c* vect[0] - s* vect[1], s * vect[0] + c * vect[1], vect[2]};
 }
 
 std::vector<std::array<float , 3>> Perlin3D::rotateCells(std::vector< std::array<float, 3>>& baseCells, int theta){
@@ -153,11 +153,14 @@ Perlin3D::Perlin3D(float initScale, int nUnique): Perlin(initScale, nUnique){
 }
 void Perlin3D::updateMesh(ofMesh &mesh ){
     
+    if (movement){
+        currentTime = ofGetElapsedTimef() * timeScale;
+    }
+    
     for (int i = 0; i < mesh.getNumVertices(); i++){
         ofVec3f vec = mesh.getVertex(i);
-        //std::cout << "index : " << i << std::endl;
-        //std::cout << "coordinate : " << vec.x * scale << " , " << vec.y*scale << " , " << vec.z * scale << " ; no : "<<vec.x << " , " << vec.y << " , " << vec.z<<  std::endl;
-        float noiseValue = noise3D(vec.x * scale, vec.y * scale , vec.z * scale );
+       
+        float noiseValue = noise3D(vec.x * scale, vec.y * scale , vec.z * scale + currentTime );
         // todo move 
         float sill = 0.20;
         float st = ofMap(noiseValue, sill, 1.0, 0.0,1.0, true);
@@ -167,4 +170,10 @@ void Perlin3D::updateMesh(ofMesh &mesh ){
         mesh.setColor(i, col);
 
     }
+}
+
+void Perlin3D::updateRotation(float updatedTheta){
+    theta = updatedTheta;
+    cells3D = rotateCells(cells3D, theta);
+
 }

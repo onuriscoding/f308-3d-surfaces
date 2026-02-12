@@ -14,6 +14,8 @@ void ofApp::setup(){
     // --- gui setup ---
 
 
+
+    movement.addListener(this, &ofApp::movementChangedCallBack);
     gui.setup();
     //infoLabel.setup("controls", "gfesf");
     gui.setSize(300, 500);
@@ -21,7 +23,10 @@ void ofApp::setup(){
         " u/d : increase/decrease Amplitude \n"));
     gui.add(theta.setup("rotation", 140, 0, 360));
     gui.add(renderPerlin3D.setup("render 3D Perlin noise", true));
+    gui.add(movement.setup("movement", true));
     gui.add(newGeneration.setup("new noise generation "));
+    gui.add(perlinScale.setup("perlin scale ",0.02, 0.001 ,0.13 ));
+    
 
 
 
@@ -52,22 +57,41 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
+    //update scale 
+    if(ofGetMousePressed() && perlinScale.getShape().inside(ofGetMouseX(), ofGetMouseY())){
+        dragingScaleSlider = true;
+    }
+
+    if(dragingScaleSlider && !ofGetMousePressed()){
+        dragingScaleSlider = false;
+        perlin3D->setScale(perlinScale);
+        perlin2D->setScale(perlinScale);
+        
+    }
+
+
+    // update rotation 
+    if(ofGetMousePressed() && theta.getShape().inside(ofGetMouseX(), ofGetMouseY())){
+        draggingThetaSlider = true;
+    }
+
+    if(draggingThetaSlider && !ofGetMousePressed()){
+        draggingThetaSlider = false;
+        perlin2D->updateRotation(theta);
+        perlin3D->updateRotation(theta);
+        
+    }
+
+
+
+
+    //update mesh
     if (renderPerlin3D){
         perlin3D->updateMesh(mesh3D);
 
     }
     else {
-
-
-        if(ofGetMousePressed() && theta.getShape().inside(ofGetMouseX(), ofGetMouseY())){
-            draggingSlider = true;
-        }
-
-        if(draggingSlider && !ofGetMousePressed()){
-            draggingSlider = false;
-            perlin2D->updateRotation(theta);
-        }
-
         perlin2D->updateMesh(mesh2D, height2D, width2D );
     }
     
@@ -82,6 +106,9 @@ void ofApp::update(){
 void ofApp::draw(){
     if (renderPerlin3D){
         drawPerlin3D();
+        // draw gui for perlin3D
+
+
     }else {
         drawPerlin2D();
     }
@@ -133,6 +160,13 @@ void ofApp::keyPressed(int key){
 void ofApp::keyReleased(int key){
     
 }
+
+void ofApp::movementChangedCallBack(bool & value){
+    perlin2D->setMovementVal(value);
+    perlin3D->setMovementVal(value);
+
+}
+
 
 // ====== private ======
 

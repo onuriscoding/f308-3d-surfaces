@@ -22,7 +22,7 @@ class Perlin2D : public Perlin{
         //int nUnique;
 
         // use as rotation value 
-        int theta;
+        float thetaRad;
         // amplitude of the representaiton
         float amplitude;
 
@@ -56,7 +56,7 @@ class Perlin2D : public Perlin{
         param vect : gradiant vector  
         param theta :  
         */
-        std::array<float, 2> rotate(std::array<float, 2>& vect, int theta); 
+        std::array<float, 2> rotate(std::array<float, 2>& vect); 
 
         
         
@@ -74,7 +74,7 @@ class Perlin2D : public Perlin{
 
     public: 
         // -- constructor --  
-        Perlin2D(float initScale, int nUnique, int theta);
+        Perlin2D(float initScale, int nUnique, float theta);
         ~Perlin2D() = default;
 
         
@@ -91,7 +91,7 @@ class Perlin2D : public Perlin{
         /*
         brief : rotates all the gradiant vectors 
         */
-        std::vector<std::array<float , 2>> rotateCells(std::vector< std::array<float, 2>>& baseCells , int theta);
+        std::vector<std::array<float , 2>> rotateCells(std::vector< std::array<float, 2>>& baseCells);
 
         
 

@@ -43,15 +43,23 @@ public:
     // gui 
     ofxPanel gui;
     ofxLabel infoLabel;
-    ofxIntSlider theta;
+    ofxFloatSlider theta;
     ofxToggle renderPerlin3D;
+    ofxToggle movement;
     ofxButton newGeneration;
+    ofxFloatSlider perlinScale;
+
+    
+
+
+    void movementChangedCallBack(bool & value);
 
 private:
 
     std::unique_ptr<Perlin2D> perlin2D;
     std::unique_ptr<Perlin3D> perlin3D;
-    bool draggingSlider;
+    bool draggingThetaSlider;
+    bool dragingScaleSlider;
 
 
     void initMesh2D();

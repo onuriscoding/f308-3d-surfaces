@@ -9,18 +9,22 @@
 
 
 // ------- constructor ------- 
-Perlin2D::Perlin2D(float initScale , int nUnique, int theta) : Perlin(initScale, nUnique), theta(theta), amplitude(10.0) {
+Perlin2D::Perlin2D(float initScale , int nUnique, float theta) : Perlin(initScale, nUnique), thetaRad(theta* (2.0f * M_PI / 360.0f)), amplitude(35.0) {
     initPermuation();
 }
 
 
 void Perlin2D::updateMesh(ofMesh &mesh, int height , int width){
-      for (int y = 0 ; y < height; y ++){
+    
+    if (movement){
+        currentTime = ofGetElapsedTimef() * timeScale;
+    }
+    for (int y = 0 ; y < height; y ++){
         for (int x = 0 ; x < width; x ++){
             int index = x + y * width;
             ofVec3f v = mesh.getVertex(index);
         
-            float noiseValue = noise2D(x * scale, y * scale); 
+            float noiseValue = noise2D(x * scale, y * scale + currentTime); 
             
             //noiseValue = ofMap(noiseValue, -1, 1, 0, 1);   
             
@@ -30,15 +34,15 @@ void Perlin2D::updateMesh(ofMesh &mesh, int height , int width){
             mesh.setColor(index, c );
 
         }
-    }
+}
 }
 
 
-std::vector<std::array<float , 2>> Perlin2D::rotateCells(std::vector< std::array<float, 2>>& baseCells, int theta){
+std::vector<std::array<float , 2>> Perlin2D::rotateCells(std::vector< std::array<float, 2>>& baseCells){
     std::vector<std::array<float, 2>> res;
     res.reserve(baseCells.size());
     for (auto & v : baseCells ){
-        res.push_back(rotate(v, theta));
+        res.push_back(rotate(v));
     }
     return res;
 }
@@ -53,8 +57,9 @@ void Perlin2D::decreaseAmplitude(float value){
 
 
 void Perlin2D::updateRotation(float updatedTheta){
-    theta = updatedTheta;
-    cells2D = rotateCells(cells2D, theta/ 360*2 * M_PI);
+    thetaRad = updatedTheta * (2.0f * M_PI / 360.0f);
+    //thetaRad = updatedTheta;
+    cells2D = rotateCells(cells2D);
 
 }
 
@@ -69,7 +74,7 @@ void Perlin2D::updateRotation(float updatedTheta){
 
 
 float Perlin2D::getTheta(){
-    return theta;
+    return thetaRad;
 }
 
 // ================ private ================
@@ -82,8 +87,8 @@ void Perlin2D::initPermuation(){
         cellsBase.push_back({(this->randomFloat() - 0.5f ) * 2.0f , (this->randomFloat() - 0.5f) *2.0f });
     }
 
-
-    cells2D = rotateCells(cellsBase, theta / 360 * 2 * M_PI);
+    
+    cells2D = rotateCells(cellsBase);
     
     //init perm
     perm.resize(nUnique);
@@ -95,11 +100,11 @@ void Perlin2D::initPermuation(){
 }
 
 
-std::array<float , 2> Perlin2D::rotate(std::array<float, 2>& vect, int theta){
-
-    float c = std::cos(theta);
-    float s = std::sin(theta);
-    return {c* vect[0] - s* vect[1], s * vect[0] - c * vect[1]};
+std::array<float , 2> Perlin2D::rotate(std::array<float, 2>& vect){
+    
+    float c = std::cos(thetaRad);
+    float s = std::sin(thetaRad);
+    return {c* vect[0] - s* vect[1], s * vect[0] + c * vect[1]};
 }
   
 

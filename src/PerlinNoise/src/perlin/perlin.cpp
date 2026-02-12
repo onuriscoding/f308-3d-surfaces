@@ -34,10 +34,12 @@ float Perlin::randomFloat(){
 
 
 // ========= public =========
-Perlin::Perlin(float initScale , int nUnique) : scale(initScale) , nUnique(nUnique) {
+Perlin::Perlin(float initScale , int nUnique) : scale(initScale) , nUnique(nUnique), timeScale(0.2f), currentTime(0.0f){
     
 }
 
+
+// ==== setters ====
 
 void Perlin::setScale(float newScale){
     scale = newScale;
@@ -46,4 +48,27 @@ void Perlin::setNunique(int newNunique){
     nUnique = newNunique;
 }
 
+void Perlin::setTimeScale(float newTimeScale){
+    timeScale = newTimeScale;
+}
 
+
+void Perlin::setMovementVal(bool val){
+    movement = val;
+}
+
+// ==== getters ====
+
+float Perlin::getTimeScale(){
+    return timeScale;
+}
+
+
+int Perlin::getUnique(){
+    return nUnique;
+} 
+
+
+int Perlin::getScale(){
+    return scale;
+}

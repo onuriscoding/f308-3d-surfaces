@@ -18,6 +18,13 @@ class Perlin {
         float scale ;
         //noise that repeats every nUnique units
         int nUnique;
+
+
+        float timeScale;
+        float currentTime;
+
+        bool movement;
+
         
         /*
         brief : return a weighted average 
@@ -42,7 +49,14 @@ class Perlin {
         void setNunique(int newNunique);
         void setScale(float newScale);
 
+        void setTimeScale(float newTimeScale);
+
+        void setMovementVal(bool val);
+
         // === getters ===
+
+
+        float getTimeScale();
         int getUnique(); 
         int getScale();
 

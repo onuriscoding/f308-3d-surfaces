@@ -22,7 +22,7 @@ class Perlin3D : public Perlin {
 
         void initPermutation();
 
-        std::array<float , 3> rotate(std::array<float, 3>& vect, int theta);
+        std::array<float , 3> rotate(std::array<float, 3>& vect, float theta);
 
         std::vector<std::array<float, 3>> rotateCells(std::vector< std::array<float, 3>>& baseCells, int theta);
 
@@ -41,6 +41,8 @@ class Perlin3D : public Perlin {
         brief : dot product between two vectors 
         */
         float dot(std::array<float , 3>& vect1, std::array<float , 3> & vect2);
+
+        void updateRotation(float updatedTheta);
 
 
 
