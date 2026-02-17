@@ -4,23 +4,11 @@
 
 // ======== private ========
 
-void Perlin3D::initPermutation(){
-    //init cells3D
-    // std::vector<std::array<float, 3>> cellsBase ;
-    // for (int i = 0; i < nUnique  ; i ++){
-    //     cellsBase.push_back({(this->randomFloat() - 0.5f ) * 2.0f , (this->randomFloat() - 0.5f) *2.0f, (this->randomFloat() - 0.5f) *2.0f});
-    // }
-
-    for (int i = 0; i < nUnique* 2; i++) {
-        ofVec3f g( randomFloat()*2-1, randomFloat()*2-1, randomFloat()*2-1);
-        g.normalize();
-        cells3D.push_back({g.x, g.y, g.z});
-    }
 
 
-    //cells3D = rotateCells(cellsBase, theta / 360 * 2 * M_PI);
-    
-    //init perm
+
+void Perlin3D::generatePermutation(){
+    srand(seed);
     perm.resize(nUnique);
     std::iota(perm.begin(), perm.end(), 0);
     static std::mt19937 rng(std::time(nullptr));
@@ -31,6 +19,15 @@ void Perlin3D::initPermutation(){
         perm[nUnique + i] = perm[i];
     }
 
+}
+
+void Perlin3D::generateCells3D(){
+    srand(seed);
+    for (int i = 0; i < nUnique* 2; i++) {
+        ofVec3f g( randomFloat()*2-1, randomFloat()*2-1, randomFloat()*2-1);
+        g.normalize();
+        cells3D.push_back({g.x, g.y, g.z});
+    }
 }
 
 
@@ -58,7 +55,11 @@ float Perlin3D::dot(std::array<float , 3>& vect1, std::array<float , 3> & vect2)
 
 
 
-float Perlin3D::noise3D(float x, float y , float z){
+float Perlin3D::noise3D(float x, float y , float z, float currentTime){
+
+    x = x* scale;
+    y = y * scale;
+    z = z * scale + currentTime;
      // position without the unit space.
     int X = (int)floor(x) & 255;
     int Y = (int)floor(y)& 255;
@@ -68,29 +69,6 @@ float Perlin3D::noise3D(float x, float y , float z){
     float xf = x - floor(x);
     float yf = y - floor(y);
     float zf = z - floor(z);
-    
-
-
-    // int X0 = X% nUnique;
-    // int Y0 = Y% nUnique;
-    // int Z0 = Z% nUnique;
-
-    // int X1 = (X + 1) % nUnique;
-    // int Y1 = (Y + 1) % nUnique;
-    // int Z1 = (Z + 1) % nUnique;
-
-    // std::array<float, 3> g000 = cells3D[perm[X0 + perm[Y0+ perm[Z0]]] ];
-    // std::array<float, 3> g100 = cells3D[perm[X1 + perm[Y0+ perm[Z0]]] ];
-    // std::array<float, 3> g010 = cells3D[perm[X0 + perm[Y1+ perm[Z0]]] ];
-    // std::array<float, 3> g110 = cells3D[perm[X1 + perm[Y1+ perm[Z0]]] ];
-
-
-    // std::array<float, 3> g001 = cells3D[perm[X0 + perm[Y0+ perm[Z1]]]];
-    // std::array<float, 3> g101 = cells3D[perm[X1 + perm[Y0+ perm[Z1]]]];
-    // std::array<float, 3> g011 = cells3D[perm[X0 + perm[Y1+ perm[Z1]]]];
-    // std::array<float, 3> g111 = cells3D[perm[X1 + perm[Y1+ perm[Z1]]]];
-
-
    
     int A = perm[X] + Y;
     int AA = perm[A] + Z;
@@ -110,7 +88,7 @@ float Perlin3D::noise3D(float x, float y , float z){
     std::array<float , 3> g011 = cells3D[perm[AB + 1]];
     std::array<float , 3> g111 = cells3D[perm[BB + 1]];
 
-    
+
     std::array<float, 3> d000 = {xf, yf, zf};
     std::array<float, 3> d100 = {xf-1, yf, zf};
     std::array<float, 3> d010 = {xf, yf-1, zf};
@@ -122,7 +100,7 @@ float Perlin3D::noise3D(float x, float y , float z){
     std::array<float, 3> d111 = {xf-1, yf-1, zf-1};
 
 
-    
+
     float in000 = dot(g000, d000);
     float in100 = dot(g100, d100);
     float in010 = dot(g010, d010);
@@ -148,32 +126,31 @@ float Perlin3D::noise3D(float x, float y , float z){
 // ======== public ========
 
 
-Perlin3D::Perlin3D(float initScale, int nUnique): Perlin(initScale, nUnique){
-    this->initPermutation();
+Perlin3D::Perlin3D(float initScale, int nUnique, ColorFunction color, unsigned int seed): Perlin(initScale, nUnique, seed), colorFunction(color){
+    this->generateCells3D();
+    this->generatePermutation();
 }
-void Perlin3D::updateMesh(ofMesh &mesh ){
-    
-    if (movement){
-        currentTime = ofGetElapsedTimef() * timeScale;
-    }
-    
-    for (int i = 0; i < mesh.getNumVertices(); i++){
-        ofVec3f vec = mesh.getVertex(i);
-       
-        float noiseValue = noise3D(vec.x * scale, vec.y * scale , vec.z * scale + currentTime );
-        // todo move 
-        float sill = 0.20;
-        float st = ofMap(noiseValue, sill, 1.0, 0.0,1.0, true);
 
-        ofFloatColor col;
-        col.setHsb(ofMap(noiseValue, 0, 1, 0.6, 0.95), 0.8,1.0,st);
-        mesh.setColor(i, col);
-
-    }
+ofFloatColor Perlin3D::getColorFromNoise(float noiseValue){
+    float sill = 0.20;
+    
+    return colorFunction(noiseValue, sill);
 }
 
 void Perlin3D::updateRotation(float updatedTheta){
     theta = updatedTheta;
     cells3D = rotateCells(cells3D, theta);
 
+}
+
+
+void Perlin3D::setColorFunction(ColorFunction newColorFunction){
+    colorFunction = newColorFunction;
+}
+
+
+void Perlin3D::createNewGeneration(unsigned int seed ){
+    setSeed(seed);
+    generateCells3D();
+    generatePermutation();
 }

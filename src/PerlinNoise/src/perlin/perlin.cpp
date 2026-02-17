@@ -34,7 +34,7 @@ float Perlin::randomFloat(){
 
 
 // ========= public =========
-Perlin::Perlin(float initScale , int nUnique) : scale(initScale) , nUnique(nUnique), timeScale(0.2f), currentTime(0.0f){
+Perlin::Perlin(float initScale , int nUnique,unsigned int seed) : scale(initScale) , nUnique(nUnique), timeScale(0.2f), currentTime(0.0f), seed(seed){
     
 }
 
@@ -55,6 +55,10 @@ void Perlin::setTimeScale(float newTimeScale){
 
 void Perlin::setMovementVal(bool val){
     movement = val;
+}
+
+void Perlin::setSeed(unsigned int newSeed){
+    seed = newSeed;
 }
 
 // ==== getters ====

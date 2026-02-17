@@ -6,7 +6,7 @@
 #include "ofxGui.h"
 #include "ofMesh.h"
 
-#include "perlin3D/perlin3D.hpp"
+#include "perlinManager/perlinManager.hpp"
 
 #include "random"
 #include <memory>
@@ -48,16 +48,21 @@ public:
     ofxToggle movement;
     ofxButton newGeneration;
     ofxFloatSlider perlinScale;
+    ofxToggle uniquePerlin;
 
     
 
 
     void movementChangedCallBack(bool & value);
+    void setMulitplePerlin3D(bool & value);
 
 private:
 
     std::unique_ptr<Perlin2D> perlin2D;
-    std::unique_ptr<Perlin3D> perlin3D;
+    
+    std::unique_ptr<PerlinManager> perlinManager;
+
+    
     bool draggingThetaSlider;
     bool dragingScaleSlider;
 

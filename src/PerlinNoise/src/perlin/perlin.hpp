@@ -19,7 +19,7 @@ class Perlin {
         //noise that repeats every nUnique units
         int nUnique;
 
-
+        unsigned int seed;
         float timeScale;
         float currentTime;
 
@@ -42,7 +42,7 @@ class Perlin {
 
     public : 
         //=== constructor ===
-        Perlin(float initScale, int nUnique);
+        Perlin(float initScale, int nUnique, unsigned int seed);
         ~Perlin()=default ;
 
         // === setters ===
@@ -52,6 +52,8 @@ class Perlin {
         void setTimeScale(float newTimeScale);
 
         void setMovementVal(bool val);
+
+        void setSeed(unsigned int newSeed);
 
         // === getters ===
 

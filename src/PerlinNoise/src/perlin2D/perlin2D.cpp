@@ -9,8 +9,9 @@
 
 
 // ------- constructor ------- 
-Perlin2D::Perlin2D(float initScale , int nUnique, float theta) : Perlin(initScale, nUnique), thetaRad(theta* (2.0f * M_PI / 360.0f)), amplitude(35.0) {
-    initPermuation();
+Perlin2D::Perlin2D(float initScale , int nUnique, float theta, unsigned int seed) : Perlin(initScale, nUnique, seed), thetaRad(theta* (2.0f * M_PI / 360.0f)), amplitude(35.0) {
+    generateCells();
+    generatePerms();
 }
 
 
@@ -79,23 +80,25 @@ float Perlin2D::getTheta(){
 
 // ================ private ================
 
-void Perlin2D::initPermuation(){        
 
-    //init cells2D  
+
+
+void Perlin2D::generateCells(){
+    srand(seed);
     std::vector<std::array<float, 2>> cellsBase ;
     for (int i = 0; i < nUnique * 2 ; i ++){
         cellsBase.push_back({(this->randomFloat() - 0.5f ) * 2.0f , (this->randomFloat() - 0.5f) *2.0f });
-    }
-
-    
+    }    
     cells2D = rotateCells(cellsBase);
-    
-    //init perm
+
+}
+void Perlin2D::generatePerms(){
+    srand(seed);
+
     perm.resize(nUnique);
     std::iota(perm.begin(), perm.end(), 0);
     static std::mt19937 rng(std::time(nullptr));
     std::shuffle(perm.begin(), perm.end(), rng);
-
 
 }
 

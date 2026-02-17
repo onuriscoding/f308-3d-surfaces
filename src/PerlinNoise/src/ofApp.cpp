@@ -8,14 +8,16 @@ void ofApp::setup(){
     width2D = 500;
     size3D = 80;
     spacing = 3.0f;
-    perlin2D = std::make_unique<Perlin2D>(0.02,250, 13.0);
-    perlin3D = std::make_unique<Perlin3D>(0.02, 256);
+    perlin2D = std::make_unique<Perlin2D>(0.02,250, 13.0, 4);
+    
+    perlinManager = std::make_unique<PerlinManager>();
     
     // --- gui setup ---
 
 
 
     movement.addListener(this, &ofApp::movementChangedCallBack);
+    uniquePerlin.addListener(this, &ofApp::setMulitplePerlin3D);
     gui.setup();
     //infoLabel.setup("controls", "gfesf");
     gui.setSize(300, 500);
@@ -23,10 +25,10 @@ void ofApp::setup(){
         " u/d : increase/decrease Amplitude \n"));
     gui.add(theta.setup("rotation", 140, 0, 360));
     gui.add(renderPerlin3D.setup("render 3D Perlin noise", true));
-    gui.add(movement.setup("movement", true));
+    gui.add(movement.setup("movement", false));
     gui.add(newGeneration.setup("new noise generation "));
-    gui.add(perlinScale.setup("perlin scale ",0.02, 0.001 ,0.13 ));
-    
+    gui.add(perlinScale.setup("perlin scale ",0.02, 0.001 ,0.13 ));  
+    gui.add(uniquePerlin.setup("unique perlin3D ", true));
 
 
 
@@ -65,7 +67,7 @@ void ofApp::update(){
 
     if(dragingScaleSlider && !ofGetMousePressed()){
         dragingScaleSlider = false;
-        perlin3D->setScale(perlinScale);
+        //perlin3D->setScale(perlinScale);
         perlin2D->setScale(perlinScale);
         
     }
@@ -79,16 +81,16 @@ void ofApp::update(){
     if(draggingThetaSlider && !ofGetMousePressed()){
         draggingThetaSlider = false;
         perlin2D->updateRotation(theta);
-        perlin3D->updateRotation(theta);
+        //perlin3D->updateRotation(theta);
         
     }
 
 
-
-
+  
     //update mesh
     if (renderPerlin3D){
-        perlin3D->updateMesh(mesh3D);
+    
+        perlinManager->updateMesh(mesh3D);
 
     }
     else {
@@ -106,8 +108,8 @@ void ofApp::update(){
 void ofApp::draw(){
     if (renderPerlin3D){
         drawPerlin3D();
-        // draw gui for perlin3D
-
+        
+        
 
     }else {
         drawPerlin2D();
@@ -163,10 +165,14 @@ void ofApp::keyReleased(int key){
 
 void ofApp::movementChangedCallBack(bool & value){
     perlin2D->setMovementVal(value);
-    perlin3D->setMovementVal(value);
+    perlinManager->setMovementVal(value);
 
 }
 
+
+void ofApp::setMulitplePerlin3D(bool & value){
+    perlinManager->setUniquePerlin(value);
+}
 
 // ====== private ======
 

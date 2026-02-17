@@ -64,17 +64,18 @@ class Perlin2D : public Perlin{
         brief : dot product between two vectors 
         */
         float dot(std::array<float , 2>& vect1, std::array<float , 2> & vect2);
+
+        void generateCells();
+        void generatePerms();
         
        
 
-
-        void initPermuation();
 
 
 
     public: 
         // -- constructor --  
-        Perlin2D(float initScale, int nUnique, float theta);
+        Perlin2D(float initScale, int nUnique, float theta, unsigned int seed);
         ~Perlin2D() = default;
 
         
