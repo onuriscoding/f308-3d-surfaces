@@ -12,6 +12,8 @@ class ColorManager  {
         static ofFloatColor yellowColor(float noiseValue, float sill);
         static ofFloatColor rockColor(float noiseValue, float sill);
         static ofFloatColor goldColor(float noiseValue, float sill);
+        static ofFloatColor diamondColor(float noiseValue, float sill);
+        static ofFloatColor gravelColor(float noiseValue, float sill);
 
 
 

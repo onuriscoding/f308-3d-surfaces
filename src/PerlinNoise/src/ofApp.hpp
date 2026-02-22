@@ -50,11 +50,17 @@ public:
     ofxFloatSlider perlinScale;
     ofxToggle uniquePerlin;
 
+    ofxPanel guiPerlin3D;
+    ofxToggle rock;
+    ofxToggle earth;
+    ofxToggle gravel;
+
     
 
 
     void movementChangedCallBack(bool & value);
-    void setMulitplePerlin3D(bool & value);
+    void setValPerlin3DcallBack(bool & value);
+    
 
 private:
 

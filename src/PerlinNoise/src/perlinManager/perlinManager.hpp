@@ -13,8 +13,13 @@ class PerlinManager {
 
         float timeScale;
         float currentTime;
+        int size ;
         bool movement;
         bool uniquePerlin;
+        bool earth;
+        bool rock;
+        bool gravel;
+        
 
         void initPerlins();
         float smoothstep(float edge0, float edge1, float x);
@@ -25,16 +30,19 @@ class PerlinManager {
 
 
         //constructor 
-        PerlinManager();
+        PerlinManager(int meshSize);
         ~PerlinManager() = default;
 
 
         void updateMesh(ofMesh &mesh );
+        void earthMesh(ofMesh &mesh);
 
         // ===== setters =====
         void setMovementVal(bool val);
+        void setRockVal(bool val);
+        void setEarthVal(bool val);
+        void setCaveVal(bool val);
 
-        void setUniquePerlin(bool val);
 
         // ===== getters =====
         

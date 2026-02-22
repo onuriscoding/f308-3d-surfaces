@@ -10,14 +10,14 @@ void ofApp::setup(){
     spacing = 3.0f;
     perlin2D = std::make_unique<Perlin2D>(0.02,250, 13.0, 4);
     
-    perlinManager = std::make_unique<PerlinManager>();
+    perlinManager = std::make_unique<PerlinManager>(size3D);
     
     // --- gui setup ---
 
 
 
     movement.addListener(this, &ofApp::movementChangedCallBack);
-    uniquePerlin.addListener(this, &ofApp::setMulitplePerlin3D);
+    uniquePerlin.addListener(this, &ofApp::setValPerlin3DcallBack);
     gui.setup();
     //infoLabel.setup("controls", "gfesf");
     gui.setSize(300, 500);
@@ -29,6 +29,14 @@ void ofApp::setup(){
     gui.add(newGeneration.setup("new noise generation "));
     gui.add(perlinScale.setup("perlin scale ",0.02, 0.001 ,0.13 ));  
     gui.add(uniquePerlin.setup("unique perlin3D ", true));
+
+
+    gravel.addListener(this, &ofApp::setValPerlin3DcallBack);
+    earth.addListener(this, &ofApp::setValPerlin3DcallBack);
+    rock.addListener(this, &ofApp::setValPerlin3DcallBack);
+    gui.add(earth.setup("earth : ", true));
+    gui.add(gravel.setup("gravel : ", false));
+    gui.add(rock.setup("rock : ", false));
 
 
 
@@ -53,6 +61,8 @@ void ofApp::setup(){
    
     mainCam.setPosition(0, 0, 600);
     mainCam.lookAt(glm::vec3(0,0,0));
+
+    perlinManager->updateMesh(mesh3D);
 
 
 }
@@ -90,7 +100,7 @@ void ofApp::update(){
     //update mesh
     if (renderPerlin3D){
     
-        perlinManager->updateMesh(mesh3D);
+        //perlinManager->updateMesh(mesh3D);   
 
     }
     else {
@@ -107,6 +117,7 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     if (renderPerlin3D){
+
         drawPerlin3D();
         
         
@@ -114,6 +125,7 @@ void ofApp::draw(){
     }else {
         drawPerlin2D();
     }
+    
     gui.draw();
 }
 
@@ -170,8 +182,12 @@ void ofApp::movementChangedCallBack(bool & value){
 }
 
 
-void ofApp::setMulitplePerlin3D(bool & value){
-    perlinManager->setUniquePerlin(value);
+void ofApp::setValPerlin3DcallBack(bool & value){
+    perlinManager->setCaveVal(gravel);
+    perlinManager->setEarthVal(earth);
+    perlinManager->setRockVal(rock);
+    perlinManager->updateMesh(mesh3D);
+    
 }
 
 // ====== private ======

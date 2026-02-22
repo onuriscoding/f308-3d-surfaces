@@ -132,7 +132,7 @@ Perlin3D::Perlin3D(float initScale, int nUnique, ColorFunction color, unsigned i
 }
 
 ofFloatColor Perlin3D::getColorFromNoise(float noiseValue){
-    float sill = 0.20;
+    float sill = 0.40;
     
     return colorFunction(noiseValue, sill);
 }

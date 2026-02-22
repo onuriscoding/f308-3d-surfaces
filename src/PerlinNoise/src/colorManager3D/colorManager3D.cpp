@@ -11,7 +11,7 @@ ofFloatColor ColorManager::purpleColor(float noiseValue, float sill ){
 }
 
 ofFloatColor ColorManager::goldColor(float noiseValue, float sill){
-    float hue = ofMap(noiseValue, 0.20, 1.0, 0.55, 0.65); 
+    float hue = ofMap(noiseValue, sill, 1.0, 0.0, 1.0, true); 
     ofFloatColor col;
     col.setHsb(hue, 0.9, 1.0);
     return col;
@@ -27,4 +27,20 @@ ofFloatColor ColorManager::yellowColor(float noiseValue, float sill){
     ofFloatColor col;
     col.setHsb(ofMap(noiseValue, 0, 1, 0.12, 0.18),  0.8,1.0, st);
     return col;
+}
+
+
+ofFloatColor ColorManager::diamondColor(float noiseValue, float sill){
+    float st = ofMap(noiseValue, sill, 1.0, 0.0, 1.0, true);
+
+    ofFloatColor col;
+    col.setHsb(
+        ofMap(noiseValue, 0, 1, 0.55, 0.65), 0.9, 1.0, st);
+    return col;
+}
+
+ofFloatColor ColorManager::gravelColor(float noiseValue, float sill){
+    float st = ofMap(noiseValue, sill, 1.0, 0.0, 1.0, true);
+    float gray = ofMap(noiseValue, 0, 1, 0.4, 0.7);
+    return ofFloatColor(gray, gray, gray, st);
 }
