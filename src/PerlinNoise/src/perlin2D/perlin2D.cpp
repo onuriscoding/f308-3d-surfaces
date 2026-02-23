@@ -25,7 +25,7 @@ void Perlin2D::updateMesh(ofMesh &mesh, int height , int width){
             int index = x + y * width;
             ofVec3f v = mesh.getVertex(index);
         
-            float noiseValue = noise2D(x * scale, y * scale + currentTime); 
+            float noiseValue = fbm2D(x * scale, y * scale + currentTime);
             
             //noiseValue = ofMap(noiseValue, -1, 1, 0, 1);   
             
@@ -68,7 +68,9 @@ void Perlin2D::updateRotation(float updatedTheta){
 
 //------------------ setters ------------------
 
-
+void Perlin2D::setAmplitude(float value){
+    amplitude = value;
+}
 
 
 //------------------ getters ------------------
@@ -76,6 +78,10 @@ void Perlin2D::updateRotation(float updatedTheta){
 
 float Perlin2D::getTheta(){
     return thetaRad;
+}
+
+float Perlin2D::getAmplitude(){
+    return amplitude;
 }
 
 // ================ private ================
@@ -157,6 +163,23 @@ float Perlin2D::noise2D(float x , float y){
     return lerp(l1, l2, fade(yf)) + 0.5;
 }
 
+
+
+float Perlin2D::fbm2D(float x, float y){
+    float total = 0.0f;
+    float frequency = 1.0f;
+    float amp = 1.0f;
+    float maxValue = 0.0f;
+
+    for (int i = 0; i < octaves; i++){
+        total += noise2D(x * frequency, y * frequency) * amp;
+        maxValue += amp;
+        frequency *= lacunarity;
+        amp *= persistence;
+    }
+
+    return total / maxValue;
+}
 
 
 float Perlin2D::dot(std::array<float , 2>& vect1, std::array<float , 2> & vect2){

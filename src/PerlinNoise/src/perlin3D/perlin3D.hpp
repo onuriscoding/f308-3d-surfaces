@@ -46,6 +46,12 @@ class Perlin3D : public Perlin {
         //void updateMesh(ofMesh &mesh );
         float noise3D(float x, float y, float z, float currentTime);
 
+        /*
+        brief : fractional Brownian Motion - stacks multiple octaves of noise3D
+        for richer, multi-scale detail
+        */
+        float fbm3D(float x, float y, float z, float currentTime);
+
         ofFloatColor getColorFromNoise(float noiseValue);        
 
 

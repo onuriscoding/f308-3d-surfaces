@@ -25,9 +25,14 @@ class Perlin {
 
         bool movement;
 
-        
+        // fBm parameters
+        int octaves;
+        float lacunarity;
+        float persistence;
+
+
         /*
-        brief : return a weighted average 
+        brief : return a weighted average
         */
         float lerp(float a, float b, float t);
         /*
@@ -55,12 +60,20 @@ class Perlin {
 
         void setSeed(unsigned int newSeed);
 
+        void setOctaves(int newOctaves);
+        void setLacunarity(float newLacunarity);
+        void setPersistence(float newPersistence);
+
         // === getters ===
 
 
         float getTimeScale();
-        int getUnique(); 
+        int getUnique();
         int getScale();
+
+        int getOctaves();
+        float getLacunarity();
+        float getPersistence();
 
 
 };

@@ -27,8 +27,12 @@ void ofApp::setup(){
     gui.add(renderPerlin3D.setup("render 3D Perlin noise", true));
     gui.add(movement.setup("movement", false));
     gui.add(newGeneration.setup("new noise generation "));
-    gui.add(perlinScale.setup("perlin scale ",0.02, 0.001 ,0.13 ));  
+    gui.add(perlinScale.setup("perlin scale ",0.02, 0.001 ,0.13 ));
     gui.add(uniquePerlin.setup("unique perlin3D ", true));
+    gui.add(amplitudeSlider.setup("amplitude", 35.0, 1.0, 100.0));
+    gui.add(octavesSlider.setup("octaves", 1, 1, 8));
+    gui.add(sillSlider.setup("density threshold", 0.40, 0.05, 0.80));
+    gui.add(scale3DSlider.setup("3D scale", 0.02, 0.005, 0.15));
 
 
     gravel.addListener(this, &ofApp::setValPerlin3DcallBack);
@@ -83,7 +87,55 @@ void ofApp::update(){
     }
 
 
-    // update rotation 
+    // update amplitude
+    if(ofGetMousePressed() && amplitudeSlider.getShape().inside(ofGetMouseX(), ofGetMouseY())){
+        draggingAmplitudeSlider = true;
+    }
+
+    if(draggingAmplitudeSlider && !ofGetMousePressed()){
+        draggingAmplitudeSlider = false;
+        perlin2D->setAmplitude(amplitudeSlider);
+    }
+
+
+    // update octaves
+    if(ofGetMousePressed() && octavesSlider.getShape().inside(ofGetMouseX(), ofGetMouseY())){
+        draggingOctavesSlider = true;
+    }
+
+    if(draggingOctavesSlider && !ofGetMousePressed()){
+        draggingOctavesSlider = false;
+        perlin2D->setOctaves(octavesSlider);
+        perlinManager->setOctaves(octavesSlider);
+        perlinManager->updateMesh(mesh3D);
+    }
+
+
+    // update sill (density threshold)
+    if(ofGetMousePressed() && sillSlider.getShape().inside(ofGetMouseX(), ofGetMouseY())){
+        draggingSillSlider = true;
+    }
+
+    if(draggingSillSlider && !ofGetMousePressed()){
+        draggingSillSlider = false;
+        perlinManager->setSill(sillSlider);
+        perlinManager->updateMesh(mesh3D);
+    }
+
+
+    // update 3D scale
+    if(ofGetMousePressed() && scale3DSlider.getShape().inside(ofGetMouseX(), ofGetMouseY())){
+        draggingScale3DSlider = true;
+    }
+
+    if(draggingScale3DSlider && !ofGetMousePressed()){
+        draggingScale3DSlider = false;
+        perlinManager->setScale3D(scale3DSlider);
+        perlinManager->updateMesh(mesh3D);
+    }
+
+
+    // update rotation
     if(ofGetMousePressed() && theta.getShape().inside(ofGetMouseX(), ofGetMouseY())){
         draggingThetaSlider = true;
     }
@@ -159,11 +211,13 @@ void ofApp::keyPressed(int key){
         case 'f':
             ofToggleFullscreen();
             break;   
-        case 'u' : 
+        case 'u' :
             perlin2D->increaseAmplitude(0.5);
+            amplitudeSlider = perlin2D->getAmplitude();
             break;
-        case 'd': 
+        case 'd':
             perlin2D->decreaseAmplitude(0.5);
+            amplitudeSlider = perlin2D->getAmplitude();
             break;
 
         

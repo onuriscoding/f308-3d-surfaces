@@ -10,10 +10,12 @@ class PerlinManager {
         std::vector<std::unique_ptr<Perlin3D>> perlins;
         
         std::unique_ptr<Perlin3D> noiseBlend ;
+        std::unique_ptr<Perlin3D> noiseBlend2 ;
 
         float timeScale;
         float currentTime;
         int size ;
+        float sill;
         bool movement;
         bool uniquePerlin;
         bool earth;
@@ -43,6 +45,10 @@ class PerlinManager {
         void setEarthVal(bool val);
         void setCaveVal(bool val);
 
+
+        void setOctaves(int val);
+        void setSill(float val);
+        void setScale3D(float val);
 
         // ===== getters =====
         

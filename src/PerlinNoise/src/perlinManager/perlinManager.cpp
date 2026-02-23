@@ -8,9 +8,11 @@
 
 void PerlinManager::initPerlins(){
     perlins.push_back(std::make_unique<Perlin3D>(0.02, 256, ColorManager::purpleColor, 4));
+    perlins.push_back(std::make_unique<Perlin3D>(0.02, 256, ColorManager::yellowColor, 12));
+    perlins.push_back(std::make_unique<Perlin3D>(0.02, 256, ColorManager::rockColor, 37));
     perlins.push_back(std::make_unique<Perlin3D>(0.15, 256, ColorManager::yellowColor, 12));
     noiseBlend = std::make_unique<Perlin3D>(0.02, 256, ColorManager::purpleColor, 23);
-    
+    noiseBlend2 = std::make_unique<Perlin3D>(0.02, 256, ColorManager::purpleColor, 51);
 
 }
 
@@ -22,7 +24,7 @@ float PerlinManager::smoothstep(float edge0, float edge1, float x){
 
 
 // ==================== public ====================
-PerlinManager::PerlinManager(int sizeMesh):  timeScale(0.2f), currentTime(0.0f), movement(true), uniquePerlin(true), size(sizeMesh){
+PerlinManager::PerlinManager(int sizeMesh):  timeScale(0.2f), currentTime(0.0f), movement(true), uniquePerlin(true), earth(true), rock(false), gravel(false), size(sizeMesh), sill(0.40f){
     initPerlins();
 
 
@@ -36,53 +38,50 @@ void PerlinManager::updateMesh(ofMesh &mesh ){
     if (movement){
         currentTime = ofGetElapsedTimef() * timeScale;
     }
-    
+
     for (int i = 0; i < mesh.getNumVertices(); i++){
         ofVec3f vec = mesh.getVertex(i);
         ofFloatColor finalColor = ofFloatColor(0, 0, 0, 0);
-        float noiseValue = perlins[0]->noise3D(vec.x, vec.y, vec.z, 0);
-        depth =vec.y/size ;
+        float noiseValue = perlins[0]->fbm3D(vec.x, vec.y, vec.z, currentTime);
+        depth = vec.y / size;
         factor = 1.0f - depth;
 
-        // mask 
+        // mask
         float mask = noiseBlend->noise3D(vec.x, vec.y, vec.z, 0.0f);
-        mask  = (mask + 1.0f) * 0.5f;
+        mask = (mask + 1.0f) * 0.5f;
         float t = smoothstep(0.4, 0.6, mask);
 
-      
         if (earth){
-            float earthNose  = (noiseValue + 1.0f) *0.5f;
+            float earthNoise = (noiseValue + 1.0f) * 0.5f;
             float threshold = ofMap(factor, 0.0, 1.0, 0.3, 0.6);
-            if (earthNose > threshold){
-                finalColor =  ColorManager::yellowColor(earthNose, 0.40f);
+            // smooth alpha fade around threshold instead of hard cutoff
+            float earthAlpha = smoothstep(threshold - 0.05f, threshold + 0.05f, earthNoise);
+            if (earthAlpha > 0.0f){
+                ofFloatColor earthColor = ColorManager::yellowColor(earthNoise, sill);
+                earthColor.a *= earthAlpha;
+                finalColor = earthColor;
             }
         }
         if (rock){
-            //noiseValue = (noiseValue + 1.0f) *0.5f;
-            ofFloatColor colorB = ColorManager::purpleColor(noiseValue, 0.20f);
-            finalColor = finalColor.getLerped(colorB, t) ;
-        } 
-        
-        if (gravel){
-            // todo : remove threshold
-            float threshold = 0.85;
-        
-            noiseValue = pow(noiseValue, 3.0);
-            float gravelNoise  = perlins[1]->noise3D(vec.x, vec.y, vec.z, 0);
-            ofFloatColor colorC = ColorManager::diamondColor(gravelNoise, 0.20f);
-            finalColor = finalColor.getLerped(colorC, t) ;
-        
-           
-
+            float rockNoise = perlins[2]->fbm3D(vec.x, vec.y, vec.z, currentTime);
+            ofFloatColor colorB = ColorManager::purpleColor(rockNoise, sill * 0.5f);
+            finalColor = finalColor.getLerped(colorB, t);
         }
 
+        if (gravel){
+            float gravelNoise = perlins[1]->fbm3D(vec.x, vec.y, vec.z, currentTime);
+            ofFloatColor colorC = ColorManager::diamondColor(gravelNoise, sill * 0.5f);
+
+            // blend gravel using second mask for spatial variety
+            float mask2 = noiseBlend2->noise3D(vec.x, vec.y, vec.z, 0.0f);
+            mask2 = (mask2 + 1.0f) * 0.5f;
+            float t2 = smoothstep(0.3, 0.7, mask2);
+            finalColor = finalColor.getLerped(colorC, t2);
+        }
 
         mesh.setColor(i, finalColor);
 
-
-
-
-        // float noiseValueA = perlins[0]->noise3D(vec.x, vec.y, vec.z, currentTime );   
+        // float noiseValueA = perlins[0]->noise3D(vec.x, vec.y, vec.z, currentTime );
         // ofFloatColor colorA = perlins[0]->getColorFromNoise(noiseValueA);
 
         // if (uniquePerlin){
@@ -97,12 +96,6 @@ void PerlinManager::updateMesh(ofMesh &mesh ){
         //     ofFloatColor final = colorA.getLerped(colorB, t);
         //     mesh.setColor(i,final);
         // }
-    
-     
-       
-
-        
-
 
     }
 }
@@ -127,16 +120,7 @@ void PerlinManager::earthMesh(ofMesh &mesh){
             finalColor =  ColorManager::yellowColor(noiseValue, 0.40f);
             mesh.setColor(i, finalColor);
         }
-
-
-
-
-        
-        
-
     }
-
-
 }
 
 
@@ -156,6 +140,21 @@ void PerlinManager::setCaveVal(bool val){
     gravel = val;
 }
 
+void PerlinManager::setOctaves(int val){
+    for (auto& p : perlins){
+        p->setOctaves(val);
+    }
+}
+
+void PerlinManager::setSill(float val){
+    sill = val;
+}
+
+void PerlinManager::setScale3D(float val){
+    for (auto& p : perlins){
+        p->setScale(val);
+    }
+}
 
 // ===== getters =====
 

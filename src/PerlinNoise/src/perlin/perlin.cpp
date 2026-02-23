@@ -34,8 +34,8 @@ float Perlin::randomFloat(){
 
 
 // ========= public =========
-Perlin::Perlin(float initScale , int nUnique,unsigned int seed) : scale(initScale) , nUnique(nUnique), timeScale(0.2f), currentTime(0.0f), seed(seed){
-    
+Perlin::Perlin(float initScale , int nUnique,unsigned int seed) : scale(initScale) , nUnique(nUnique), timeScale(0.2f), currentTime(0.0f), seed(seed), octaves(1), lacunarity(2.0f), persistence(0.5f){
+
 }
 
 
@@ -75,4 +75,28 @@ int Perlin::getUnique(){
 
 int Perlin::getScale(){
     return scale;
+}
+
+void Perlin::setOctaves(int newOctaves){
+    octaves = newOctaves;
+}
+
+void Perlin::setLacunarity(float newLacunarity){
+    lacunarity = newLacunarity;
+}
+
+void Perlin::setPersistence(float newPersistence){
+    persistence = newPersistence;
+}
+
+int Perlin::getOctaves(){
+    return octaves;
+}
+
+float Perlin::getLacunarity(){
+    return lacunarity;
+}
+
+float Perlin::getPersistence(){
+    return persistence;
 }

@@ -49,6 +49,10 @@ public:
     ofxButton newGeneration;
     ofxFloatSlider perlinScale;
     ofxToggle uniquePerlin;
+    ofxFloatSlider amplitudeSlider;
+    ofxIntSlider octavesSlider;
+    ofxFloatSlider sillSlider;
+    ofxFloatSlider scale3DSlider;
 
     ofxPanel guiPerlin3D;
     ofxToggle rock;
@@ -71,6 +75,10 @@ private:
     
     bool draggingThetaSlider;
     bool dragingScaleSlider;
+    bool draggingAmplitudeSlider;
+    bool draggingOctavesSlider;
+    bool draggingSillSlider;
+    bool draggingScale3DSlider;
 
 
     void initMesh2D();

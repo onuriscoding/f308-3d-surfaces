@@ -46,6 +46,11 @@ class Perlin2D : public Perlin{
         float noise2D(float x , float y);
 
         /*
+        brief : fractional Brownian Motion - stacks multiple octaves of noise2D
+        */
+        float fbm2D(float x, float y);
+
+        /*
         brief : This allows the value of the coordinates to be smoothed so that they gradually approach integer values.
         param t :  coordinate axis (x or y) 
         */
@@ -98,12 +103,13 @@ class Perlin2D : public Perlin{
 
         // =============== setters ===============
 
-
+        void setAmplitude(float value);
 
 
         // =============== getters ===============
 
-        float getTheta() ; 
+        float getTheta() ;
+        float getAmplitude();
 
 };
 

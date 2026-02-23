@@ -123,6 +123,23 @@ float Perlin3D::noise3D(float x, float y , float z, float currentTime){
 }
 
 
+float Perlin3D::fbm3D(float x, float y, float z, float currentTime){
+    float total = 0.0f;
+    float frequency = 1.0f;
+    float amp = 1.0f;
+    float maxValue = 0.0f;
+
+    for (int i = 0; i < octaves; i++){
+        total += noise3D(x * frequency, y * frequency, z * frequency, currentTime) * amp;
+        maxValue += amp;
+        frequency *= lacunarity;
+        amp *= persistence;
+    }
+
+    return total / maxValue;
+}
+
+
 // ======== public ========
 
 
