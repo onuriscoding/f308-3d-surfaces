@@ -1,5 +1,6 @@
 #include "ofApp.hpp"
-
+#include <filesystem>
+#include <iostream>
 
 
 // ===== public ===== 
@@ -390,9 +391,25 @@ void ofApp::drawSplitView(){
 
 // ====== save / export ======
 
-std::string ofApp::findMapsDir(){
-    std::string exeDir = ofFilePath::getCurrentExeDir();
-    return ofFilePath::join(exeDir, "../../../../maps");
+#include <filesystem>
+
+std::string ofApp::findMapsDir() {
+    namespace fs = std::filesystem;
+
+    fs::path currentDir = ofFilePath::getCurrentExeDir();
+
+    for (int i = 0; i <= 3; ++i) {
+        fs::path candidate = currentDir / "maps";
+
+        if (fs::exists(candidate) && fs::is_directory(candidate)) {
+            return candidate.string();
+        }
+
+        currentDir = currentDir.parent_path();
+    }
+
+    std::cerr << "Directory not found" << std::endl;
+    return "";
 }
 
 void ofApp::saveMap(){
