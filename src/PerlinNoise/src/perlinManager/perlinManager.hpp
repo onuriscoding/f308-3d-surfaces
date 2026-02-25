@@ -17,7 +17,6 @@ class PerlinManager {
         int size ;
         float sill;
         bool movement;
-        bool uniquePerlin;
         bool earth;
         bool rock;
         bool gravel;
@@ -49,6 +48,8 @@ class PerlinManager {
         void setOctaves(int val);
         void setSill(float val);
         void setScale3D(float val);
+
+        void createNewGeneration(unsigned int seed);
 
         // ===== getters =====
         

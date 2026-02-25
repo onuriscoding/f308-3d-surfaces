@@ -8,6 +8,7 @@ void ofApp::setup(){
     width2D = 500;
     size3D = 80;
     spacing = 3.0f;
+    mapsDir = findMapsDir();
     perlin2D = std::make_unique<Perlin2D>(0.02,250, 13.0, 4);
     
     perlinManager = std::make_unique<PerlinManager>(size3D);
@@ -15,21 +16,28 @@ void ofApp::setup(){
     // --- gui setup ---
 
     movement.addListener(this, &ofApp::movementChangedCallBack);
-    uniquePerlin.addListener(this, &ofApp::setValPerlin3DcallBack);
     gui.setup();
     gui.setSize(300, 500);
     gui.add(infoLabel.setup("controls", 
-        " u/d : increase/decrease Amplitude \n 1-9 : Load map 1-9 \n 0 : Load map 10 \n"));
+        " u/d : Amplitude  s : Save  e : Export PNG\n 1-9 : Load map 1-9  0 : map 10\n v : Split view  f : Fullscreen\n"));
     gui.add(theta.setup("rotation", 140, 0, 360));
     gui.add(renderPerlin3D.setup("render 3D Perlin noise", true));
     gui.add(movement.setup("movement", false));
     gui.add(newGeneration.setup("new noise generation "));
     gui.add(perlinScale.setup("perlin scale ",0.02, 0.001 ,0.13 ));
-    gui.add(uniquePerlin.setup("unique perlin3D ", true));
     gui.add(amplitudeSlider.setup("amplitude", 35.0, 1.0, 100.0));
     gui.add(octavesSlider.setup("octaves", 1, 1, 8));
     gui.add(sillSlider.setup("density threshold", 0.40, 0.05, 0.80));
     gui.add(scale3DSlider.setup("3D scale", 0.02, 0.005, 0.15));
+    gui.add(seedInput.setup("seed", 4, 0, 9999));
+
+    newGeneration.addListener(this, &ofApp::newGenerationCallback);
+
+    gui.add(saveMapBtn.setup("save map"));
+    gui.add(exportPngBtn.setup("export PNG"));
+    gui.add(splitView.setup("split view", false));
+    saveMapBtn.addListener(this, &ofApp::saveMapCallback);
+    exportPngBtn.addListener(this, &ofApp::exportPNGCallback);
 
 
     gravel.addListener(this, &ofApp::setValPerlin3DcallBack);
@@ -52,6 +60,9 @@ void ofApp::setup(){
    
     mainCam.setPosition(0, 0, 600);
     mainCam.lookAt(glm::vec3(0,0,0));
+
+    splitCam2D.setPosition(0, 0, 600);
+    splitCam2D.lookAt(glm::vec3(0,0,0));
 
     perlinManager->updateMesh(mesh3D);
 }
@@ -125,7 +136,10 @@ void ofApp::update(){
     }
 
     //update mesh
-    if (renderPerlin3D){
+    if (splitView){
+        perlin2D->updateMesh(mesh2D, height2D, width2D);
+        // 3D mesh updated on parameter change only (expensive)
+    } else if (renderPerlin3D){
         //perlinManager->updateMesh(mesh3D);   
     }
     else {
@@ -135,7 +149,6 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 
-// ! [LAUNCH FROM PerlinNoise/bin] !
 void ofApp::loadMap(int mapNumber) {
     if (mapNumber < 1 || mapNumber > 10) {
         std::cerr << "Invalid map number: " << mapNumber << ". Must be between 1 and 10." << std::endl;
@@ -143,19 +156,16 @@ void ofApp::loadMap(int mapNumber) {
     }
     
     // ! [LAUNCH FROM PerlinNoise/bin] !
-    std::string mapFile = "../maps/map" + std::to_string(mapNumber) + ".txt";
+    std::string mapFile = mapsDir + "/map" + std::to_string(mapNumber) + ".txt";
     std::unordered_map<std::string, float> params = loadParameters(mapFile);
 
     if (!params.empty()) {
         setParameters(params);
         std::cout << "Loaded Map " << mapNumber << " from " << mapFile << std::endl;
         
-        // Update mesh after render
-        if (renderPerlin3D) {
-            perlinManager->updateMesh(mesh3D);
-        } else {
-            perlin2D->updateMesh(mesh2D, height2D, width2D);
-        }
+        // Update both meshes so split view stays in sync
+        perlin2D->updateMesh(mesh2D, height2D, width2D);
+        perlinManager->updateMesh(mesh3D);
     } else {
         std::cerr << "Failed to load Map " << mapNumber << " from " << mapFile << std::endl;
     }
@@ -185,7 +195,9 @@ std::unordered_map<std::string, float> ofApp::loadParameters(const std::string &
 }
 
 void ofApp::draw(){
-    if (renderPerlin3D){
+    if (splitView){
+        drawSplitView();
+    } else if (renderPerlin3D){
         drawPerlin3D();
     }else {
         drawPerlin2D();
@@ -195,39 +207,30 @@ void ofApp::draw(){
 }
 
 void ofApp::setParameters(const std::unordered_map<std::string, float>& params) {
-    if (!perlin2D) {
-        std::cerr << "Error: perlin2D is not initialized!" << std::endl;
-        return;
-    }
-
-    std::cout << "Setting parameters..." << std::endl;
-
     if (params.find("scale") != params.end()) {
-        std::cout << "Scale: " << params.at("scale") << std::endl;
         perlin2D->setScale(params.at("scale"));
         perlinScale = params.at("scale");
     }
     if (params.find("amplitude") != params.end()) {
-        std::cout << "Amplitude: " << params.at("amplitude") << std::endl;
         perlin2D->setAmplitude(params.at("amplitude"));
         amplitudeSlider = params.at("amplitude");
     }
     if (params.find("octaves") != params.end()) {
-        std::cout << "Octaves: " << params.at("octaves") << std::endl;
-        perlin2D->setOctaves(static_cast<int>(params.at("octaves")));
-        octavesSlider = static_cast<int>(params.at("octaves"));
+        int oct = static_cast<int>(params.at("octaves"));
+        perlin2D->setOctaves(oct);
+        perlinManager->setOctaves(oct);
+        octavesSlider = oct;
     }
     if (params.find("theta") != params.end()) {
-        std::cout << "Theta: " << params.at("theta") << std::endl;
         perlin2D->updateRotation(params.at("theta"));
         theta = params.at("theta");
     }
     if (params.find("seed") != params.end()) {
-        std::cout << "Seed: " << params.at("seed") << std::endl;
-        perlin2D->setSeed(static_cast<unsigned int>(params.at("seed")));
+        unsigned int newSeed = static_cast<unsigned int>(params.at("seed"));
+        perlin2D->createNewGeneration(newSeed);
+        perlinManager->createNewGeneration(newSeed);
+        seedInput = static_cast<int>(newSeed);
     }
-
-    std::cout << "Parameters set successfully." << std::endl;
 }
 
 void ofApp::drawPerlin3D(){
@@ -252,11 +255,18 @@ void ofApp::drawPerlin2D(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    switch(key) { 
+    if (key == OF_KEY_RETURN || key == OF_KEY_ESC) editingSeed = false;
+
+    if (!editingSeed) {
+        if (key >= '1' && key <= '9') { loadMap(key - '0'); return; }
+        if (key == '0') { loadMap(10); return; }
+    }
+
+    switch(key) {
         case 'f':
             ofToggleFullscreen();
-            break;   
-        case 'u' :
+            break;
+        case 'u':
             perlin2D->increaseAmplitude(0.5);
             amplitudeSlider = perlin2D->getAmplitude();
             break;
@@ -264,36 +274,14 @@ void ofApp::keyPressed(int key){
             perlin2D->decreaseAmplitude(0.5);
             amplitudeSlider = perlin2D->getAmplitude();
             break;
-        
-        case '1':
-            loadMap(1);
+        case 's':
+            saveMap();
             break;
-        case '2':
-            loadMap(2);
+        case 'e':
+            exportPNG();
             break;
-        case '3':
-            loadMap(3);
-            break;
-        case '4':
-            loadMap(4);
-            break;
-        case '5':
-            loadMap(5);
-            break;
-        case '6':
-            loadMap(6);
-            break;
-        case '7':
-            loadMap(7);
-            break;
-        case '8':
-            loadMap(8);
-            break;
-        case '9':
-            loadMap(9);
-            break;
-        case '0':
-            loadMap(10);
+        case 'v':
+            splitView = !splitView;
             break;
     }
 }
@@ -301,6 +289,11 @@ void ofApp::keyPressed(int key){
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
     
+}
+
+//--------------------------------------------------------------
+void ofApp::mousePressed(int x, int y, int button){
+    editingSeed = seedInput.getShape().inside(x, y);
 }
 
 void ofApp::movementChangedCallBack(bool & value){
@@ -313,6 +306,18 @@ void ofApp::setValPerlin3DcallBack(bool & value){
     perlinManager->setEarthVal(earth);
     perlinManager->setRockVal(rock);
     perlinManager->updateMesh(mesh3D);
+}
+
+void ofApp::newGenerationCallback(){
+    unsigned int newSeed = static_cast<unsigned int>(seedInput);
+    perlin2D->createNewGeneration(newSeed);
+    perlinManager->createNewGeneration(newSeed);
+    if (renderPerlin3D){
+        perlinManager->updateMesh(mesh3D);
+    } else {
+        perlin2D->updateMesh(mesh2D, height2D, width2D);
+    }
+    std::cout << "New generation with seed: " << newSeed << std::endl;
 }
 
 // ====== private ======
@@ -350,4 +355,94 @@ void ofApp::initMesh3D(){
             } 
         }
     }
+}
+
+
+// ====== split view ======
+
+void ofApp::drawSplitView(){
+    int w = ofGetWidth();
+    int h = ofGetHeight();
+
+    // Left half: 2D
+    ofViewport(0, 0, w / 2, h);
+    ofEnableDepthTest();
+    splitCam2D.begin(ofRectangle(0, 0, w / 2, h));
+    mesh2D.draw();
+    splitCam2D.end();
+    ofDisableDepthTest();
+
+    // Right half: 3D
+    ofViewport(w / 2, 0, w / 2, h);
+    ofEnableDepthTest();
+    glPointSize(5);
+    glDepthMask(GL_FALSE);
+    mainCam.begin(ofRectangle(w / 2, 0, w / 2, h));
+    mesh3D.draw();
+    glDepthMask(GL_TRUE);
+    mainCam.end();
+    ofDisableDepthTest();
+
+    // Reset viewport for GUI
+    ofViewport(0, 0, w, h);
+}
+
+
+// ====== save / export ======
+
+std::string ofApp::findMapsDir(){
+    std::string exeDir = ofFilePath::getCurrentExeDir();
+    return ofFilePath::join(exeDir, "../../../../maps");
+}
+
+void ofApp::saveMap(){
+    int mapNum = 1;
+    std::string path;
+    do {
+        path = mapsDir + "/map" + ofToString(mapNum) + ".txt";
+        mapNum++;
+    } while (ofFile(path).exists());
+
+    std::ofstream file(path);
+    if (file.is_open()){
+        file << "scale=" << static_cast<float>(perlinScale) << "\n";
+        file << "amplitude=" << static_cast<float>(amplitudeSlider) << "\n";
+        file << "octaves=" << static_cast<int>(octavesSlider) << "\n";
+        file << "theta=" << static_cast<float>(theta) << "\n";
+        file << "seed=" << static_cast<int>(seedInput) << "\n";
+        file.close();
+        std::cout << "Map saved to: " << path << std::endl;
+    } else {
+        std::cerr << "Error: Could not save map to " << path << std::endl;
+    }
+}
+
+void ofApp::exportPNG(){
+    ofImage img;
+    img.allocate(width2D, height2D, OF_IMAGE_GRAYSCALE);
+
+    float scale = perlin2D->getScale();
+    for (int y = 0; y < height2D; y++){
+        for (int x = 0; x < width2D; x++){
+            // Sample raw noise directly (fbm2D returns ~0..1)
+            float noiseVal = perlin2D->fbm2D(x * scale, y * scale);
+            unsigned char grayByte = static_cast<unsigned char>(ofClamp(noiseVal * 255, 0, 255));
+            img.setColor(x, y, ofColor(grayByte));
+        }
+    }
+
+    // Create exports directory next to maps
+    std::string exportDir = mapsDir + "/../exports";
+    ofDirectory::createDirectory(exportDir, false, true);
+    std::string filename = exportDir + "/perlin_" + ofGetTimestampString() + ".png";
+    img.save(filename);
+    std::cout << "PNG exported to: " << filename << std::endl;
+}
+
+void ofApp::saveMapCallback(){
+    saveMap();
+}
+
+void ofApp::exportPNGCallback(){
+    exportPNG();
 }

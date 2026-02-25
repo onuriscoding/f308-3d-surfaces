@@ -24,7 +24,7 @@ float PerlinManager::smoothstep(float edge0, float edge1, float x){
 
 
 // ==================== public ====================
-PerlinManager::PerlinManager(int sizeMesh):  timeScale(0.2f), currentTime(0.0f), movement(true), uniquePerlin(true), earth(true), rock(false), gravel(false), size(sizeMesh), sill(0.40f){
+PerlinManager::PerlinManager(int sizeMesh):  timeScale(0.2f), currentTime(0.0f), movement(true), earth(true), rock(false), gravel(false), size(sizeMesh), sill(0.40f){
     initPerlins();
 
 
@@ -80,23 +80,6 @@ void PerlinManager::updateMesh(ofMesh &mesh ){
         }
 
         mesh.setColor(i, finalColor);
-
-        // float noiseValueA = perlins[0]->noise3D(vec.x, vec.y, vec.z, currentTime );
-        // ofFloatColor colorA = perlins[0]->getColorFromNoise(noiseValueA);
-
-        // if (uniquePerlin){
-        //     mesh.setColor(i,colorA);
-        // }else {
-        //     float noiseValueB = perlins[1]->noise3D(vec.x, vec.y, vec.z, currentTime);
-        //     ofFloatColor colorB = perlins[1]->getColorFromNoise(noiseValueB);
-        //     float mask = noiseBlend->noise3D(vec.x , vec.y ,vec.z, 0.0f);
-        //     mask = (mask + 1.0f) * 0.5f;
-        //     float t = smoothstep(0.4, 0.6, mask);
-        //     //std::cout << "t value : " << t << " ; mask value : "  << mask<<std::endl;
-        //     ofFloatColor final = colorA.getLerped(colorB, t);
-        //     mesh.setColor(i,final);
-        // }
-
     }
 }
 
@@ -154,6 +137,15 @@ void PerlinManager::setScale3D(float val){
     for (auto& p : perlins){
         p->setScale(val);
     }
+}
+
+void PerlinManager::createNewGeneration(unsigned int seed){
+    for (auto& p : perlins){
+        p->createNewGeneration(seed);
+        seed += 7; // offset each perlin so they don't all share the same pattern
+    }
+    noiseBlend->createNewGeneration(seed + 100);
+    noiseBlend2->createNewGeneration(seed + 200);
 }
 
 // ===== getters =====

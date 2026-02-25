@@ -8,7 +8,6 @@
 
 #include "perlinManager/perlinManager.hpp"
 
-#include "random"
 #include <memory>
 #include <fstream>
 #include <iostream>
@@ -24,10 +23,12 @@ public:
 
     void drawPerlin3D();
     void drawPerlin2D();
+    void drawSplitView();
     
     void computeNormals(ofMesh &mesh);
     void keyPressed(int key);
     void keyReleased(int key);
+    void mousePressed(int x, int y, int button);
     
 public:
     void setParameters(const std::unordered_map<std::string, float>& params);
@@ -35,13 +36,18 @@ public:
 private:
     void loadMap(int mapNumber);
     std::unordered_map<std::string, float> loadParameters(const std::string &filename);
+    void saveMap();
+    void exportPNG();
+    std::string findMapsDir();
     
     ofMesh mesh2D;
     ofMesh mesh3D;
     ofEasyCam mainCam;
+    ofEasyCam splitCam2D;
     int width2D, height2D;
     int size3D;
     float spacing;
+    std::string mapsDir;
 
     
 
@@ -53,11 +59,16 @@ private:
     ofxToggle movement;
     ofxButton newGeneration;
     ofxFloatSlider perlinScale;
-    ofxToggle uniquePerlin;
     ofxFloatSlider amplitudeSlider;
     ofxIntSlider octavesSlider;
     ofxFloatSlider sillSlider;
     ofxFloatSlider scale3DSlider;
+
+    ofxIntField seedInput;
+
+    ofxButton saveMapBtn;
+    ofxButton exportPngBtn;
+    ofxToggle splitView;
 
     ofxPanel guiPerlin3D;
     ofxToggle rock;
@@ -68,6 +79,9 @@ private:
 
     void movementChangedCallBack(bool & value);
     void setValPerlin3DcallBack(bool & value);
+    void newGenerationCallback();
+    void saveMapCallback();
+    void exportPNGCallback();
     
 
 private:
@@ -83,6 +97,7 @@ private:
     bool draggingOctavesSlider;
     bool draggingSillSlider;
     bool draggingScale3DSlider;
+    bool editingSeed = false;
 
 
     void initMesh2D();

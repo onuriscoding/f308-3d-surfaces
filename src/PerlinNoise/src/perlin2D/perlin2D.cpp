@@ -65,6 +65,13 @@ void Perlin2D::updateRotation(float updatedTheta){
 }
 
 
+void Perlin2D::createNewGeneration(unsigned int newSeed){
+    setSeed(newSeed);
+    generateCells();
+    generatePerms();
+}
+
+
 
 //------------------ setters ------------------
 
@@ -90,7 +97,7 @@ float Perlin2D::getAmplitude(){
 
 
 void Perlin2D::generateCells(){
-    srand(seed);
+    rng.seed(seed);
     std::vector<std::array<float, 2>> cellsBase ;
     for (int i = 0; i < nUnique * 2 ; i ++){
         cellsBase.push_back({(this->randomFloat() - 0.5f ) * 2.0f , (this->randomFloat() - 0.5f) *2.0f });
@@ -99,11 +106,10 @@ void Perlin2D::generateCells(){
 
 }
 void Perlin2D::generatePerms(){
-    srand(seed);
+    rng.seed(seed);
 
     perm.resize(nUnique);
     std::iota(perm.begin(), perm.end(), 0);
-    static std::mt19937 rng(std::time(nullptr));
     std::shuffle(perm.begin(), perm.end(), rng);
 
 }
@@ -115,14 +121,6 @@ std::array<float , 2> Perlin2D::rotate(std::array<float, 2>& vect){
     float s = std::sin(thetaRad);
     return {c* vect[0] - s* vect[1], s * vect[0] + c * vect[1]};
 }
-  
-
-
-
-
-
-
-
 
 float Perlin2D::noise2D(float x , float y){
     // position without the unit space.
@@ -140,7 +138,7 @@ float Perlin2D::noise2D(float x , float y){
     
 
     // get our gradiant vectors
-    std::array<float, 2> g00 = cells2D[X + perm[Y0]];
+    std::array<float, 2> g00 = cells2D[X0 + perm[Y0]];
     std::array<float, 2> g10 = cells2D[X1 + perm[Y0]];
     std::array<float, 2> g01 = cells2D[X0 + perm[Y1]];
     std::array<float, 2> g11 = cells2D[X1 + perm[Y1]];

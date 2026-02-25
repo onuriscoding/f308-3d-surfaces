@@ -25,16 +25,14 @@ float Perlin::fade(float t) {
 
 float Perlin::randomFloat(){
  
-    return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-
-    // float ran =  (float)(rand()) / (float)(rand());
-    // return abs((int)floor(ran) - ran );
+    std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+    return dist(rng);
 }
 
 
 
 // ========= public =========
-Perlin::Perlin(float initScale , int nUnique,unsigned int seed) : scale(initScale) , nUnique(nUnique), timeScale(0.2f), currentTime(0.0f), seed(seed), octaves(1), lacunarity(2.0f), persistence(0.5f){
+Perlin::Perlin(float initScale , int nUnique,unsigned int seed) : scale(initScale) , nUnique(nUnique), timeScale(0.2f), currentTime(0.0f), seed(seed), rng(seed), octaves(1), lacunarity(2.0f), persistence(0.5f){
 
 }
 
@@ -59,6 +57,7 @@ void Perlin::setMovementVal(bool val){
 
 void Perlin::setSeed(unsigned int newSeed){
     seed = newSeed;
+    rng.seed(seed);
 }
 
 // ==== getters ====
@@ -73,7 +72,7 @@ int Perlin::getUnique(){
 } 
 
 
-int Perlin::getScale(){
+float Perlin::getScale(){
     return scale;
 }
 

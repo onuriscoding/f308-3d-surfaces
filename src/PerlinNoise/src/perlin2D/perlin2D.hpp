@@ -2,9 +2,9 @@
 #define PERLIN_2D_HPP
 
 #include "ofMain.h"
-#include "random"
-#include "cmath"
-#include "vector"
+#include <random>
+#include <cmath>
+#include <vector>
 #include "../perlin/perlin.hpp"
 
 
@@ -45,10 +45,13 @@ class Perlin2D : public Perlin{
         */
         float noise2D(float x , float y);
 
+    public:
         /*
         brief : fractional Brownian Motion - stacks multiple octaves of noise2D
         */
         float fbm2D(float x, float y);
+
+    private:
 
         /*
         brief : This allows the value of the coordinates to be smoothed so that they gradually approach integer values.
@@ -99,7 +102,7 @@ class Perlin2D : public Perlin{
         */
         std::vector<std::array<float , 2>> rotateCells(std::vector< std::array<float, 2>>& baseCells);
 
-        
+        void createNewGeneration(unsigned int seed);
 
         // =============== setters ===============
 

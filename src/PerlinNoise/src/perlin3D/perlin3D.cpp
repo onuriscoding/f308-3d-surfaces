@@ -8,10 +8,9 @@
 
 
 void Perlin3D::generatePermutation(){
-    srand(seed);
+    rng.seed(seed);
     perm.resize(nUnique);
     std::iota(perm.begin(), perm.end(), 0);
-    static std::mt19937 rng(std::time(nullptr));
     std::shuffle(perm.begin(), perm.end(), rng);
 
     perm.resize(nUnique*2);
@@ -22,9 +21,13 @@ void Perlin3D::generatePermutation(){
 }
 
 void Perlin3D::generateCells3D(){
-    srand(seed);
+    rng.seed(seed);
+    cells3D.clear();
     for (int i = 0; i < nUnique* 2; i++) {
-        ofVec3f g( randomFloat()*2-1, randomFloat()*2-1, randomFloat()*2-1);
+        float gx = randomFloat()*2-1;
+        float gy = randomFloat()*2-1;
+        float gz = randomFloat()*2-1;
+        ofVec3f g(gx, gy, gz);
         g.normalize();
         cells3D.push_back({g.x, g.y, g.z});
     }

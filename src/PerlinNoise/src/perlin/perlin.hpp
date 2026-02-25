@@ -2,9 +2,9 @@
 #define PERLIN_HPP
 
 #include "ofMain.h"
-#include "random"
-#include "cmath"
-#include "vector"
+#include <random>
+#include <cmath>
+#include <vector>
 
 
 /**
@@ -20,6 +20,7 @@ class Perlin {
         int nUnique;
 
         unsigned int seed;
+        std::mt19937 rng;
         float timeScale;
         float currentTime;
 
@@ -69,7 +70,7 @@ class Perlin {
 
         float getTimeScale();
         int getUnique();
-        int getScale();
+        float getScale();
 
         int getOctaves();
         float getLacunarity();
