@@ -29,7 +29,12 @@ public:
     void keyPressed(int key);
     void keyReleased(int key);
     
+public:
+    void setParameters(const std::unordered_map<std::string, float>& params);
     
+private:
+    void loadMap(int mapNumber);
+    std::unordered_map<std::string, float> loadParameters(const std::string &filename);
     
     ofMesh mesh2D;
     ofMesh mesh3D;
@@ -58,8 +63,7 @@ public:
     ofxToggle rock;
     ofxToggle earth;
     ofxToggle gravel;
-
-    
+        
 
 
     void movementChangedCallBack(bool & value);
