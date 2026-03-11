@@ -2,9 +2,22 @@
 
 \section{Bruit de Perlin}
 
+Dans le domaine de l'informatique, générer et simuler des surfaces recquièrent l'utilisation de nombres aléatoires avec des variations douces entre valeurs pour donner un effet naturel. 
+Beaucoup de domaines utilisent des algorithmes de bruit de gradient, notamment l'algorithme de Perlin qui donne des résultats convaincants. 
+
 \subsection{Notion de bruit}
 
+\subsection{Notion de fonction de bruit}
+
+Le bruit est percu ici comme une valeur générée aléatoirement à un instant donné. 
+Pour mettre en relation un ensemble de bruits, nous avons recours aux fonctions de bruit qui font une interpolation entre deux valeurs, soit une moyenne. 
+Selon la fonction choisie, l'interpolation sera plus au moins douce.
+
 \subsection{Fonctionnement de l'algorithme de Perlin} 
+
+L'algorithme de Perlin peut se décomposer en plusieurs étapes : définir l'espace, générer un échantillon fini de valeurs aléatoires, faire des produits scalaires et ensuite interpoler. 
+
+
 
 \subsection{Application}
 
