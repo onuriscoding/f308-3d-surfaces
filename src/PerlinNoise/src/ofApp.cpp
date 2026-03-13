@@ -6,7 +6,7 @@
 // ===== public ===== 
 void ofApp::setup(){
     height2D = 500;
-    width2D = 500;
+    width2D = 400;
     size3D = 80;
     spacing = 3.0f;
     mapsDir = findMapsDir();
@@ -17,8 +17,13 @@ void ofApp::setup(){
     // --- gui setup ---
 
     movement.addListener(this, &ofApp::movementChangedCallBack);
+
+    ofxGuiSetFont("mono.ttf", 26);
+    ofxGuiSetDefaultWidth(820);
+    ofxGuiSetDefaultHeight(60);
+    ofxGuiSetTextPadding(8);
+
     gui.setup();
-    gui.setSize(300, 500);
     gui.add(infoLabel.setup("controls", 
         " u/d : Amplitude  s : Save  e : Export PNG\n 1-9 : Load map 1-9  0 : map 10\n v : Split view  f : Fullscreen\n"));
     gui.add(theta.setup("rotation", 140, 0, 360));
@@ -78,7 +83,6 @@ void ofApp::update(){
 
     if(dragingScaleSlider && !ofGetMousePressed()){
         dragingScaleSlider = false;
-        //perlin3D->setScale(perlinScale);
         perlin2D->setScale(perlinScale);
     }
 
@@ -139,9 +143,8 @@ void ofApp::update(){
     //update mesh
     if (splitView){
         perlin2D->updateMesh(mesh2D, height2D, width2D);
-        // 3D mesh updated on parameter change only (expensive)
     } else if (renderPerlin3D){
-        //perlinManager->updateMesh(mesh3D);   
+        // 3D mesh updated on parameter change only (expensive)
     }
     else {
         perlin2D->updateMesh(mesh2D, height2D, width2D );
@@ -156,7 +159,6 @@ void ofApp::loadMap(int mapNumber) {
         return;
     }
     
-    // ! [LAUNCH FROM PerlinNoise/bin] !
     std::string mapFile = mapsDir + "/map" + std::to_string(mapNumber) + ".txt";
     std::unordered_map<std::string, float> params = loadParameters(mapFile);
 

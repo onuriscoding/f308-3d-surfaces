@@ -1,5 +1,5 @@
-scale=0.03
-amplitude=40.0
-octaves=5
-theta=60.0
+scale=0.004
+amplitude=1
+octaves=2
+theta=0
 seed=4

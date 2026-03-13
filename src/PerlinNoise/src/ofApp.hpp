@@ -49,7 +49,7 @@ private:
     float spacing;
     std::string mapsDir;
 
-    
+    ofTrueTypeFont guiFont;
 
     // gui 
     ofxPanel gui;

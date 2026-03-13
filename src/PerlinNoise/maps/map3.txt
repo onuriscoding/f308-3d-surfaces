@@ -1,5 +1,5 @@
-scale=0.01
-amplitude=20.0
-octaves=3
-theta=30.0
+scale=0.0055
+amplitude=1
+octaves=1
+theta=0
 seed=3
