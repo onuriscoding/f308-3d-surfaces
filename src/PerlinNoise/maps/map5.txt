@@ -1,5 +1,5 @@
-scale=0.004
+scale=0.00430366
 amplitude=1
-octaves=2
-theta=0
-seed=5
+octaves=1
+theta=216.878
+seed=556

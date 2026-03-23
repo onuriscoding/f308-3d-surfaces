@@ -1,5 +1,5 @@
 scale=0.00461829
 amplitude=1
 octaves=1
-theta=37.7561
-seed=3101
+theta=102.293
+seed=630

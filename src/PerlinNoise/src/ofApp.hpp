@@ -18,7 +18,7 @@
 class ofApp : public ofBaseApp{
 public:
     int currentMap = 1;
-
+    std::vector<std::string> mapFiles;
     void setup();
     void update();
     void draw();
@@ -36,7 +36,7 @@ public:
     void setParameters(const std::unordered_map<std::string, float>& params);
     
 private:
-    void loadMap(int mapNumber);
+    void loadMap(int mapIndex);
     std::unordered_map<std::string, float> loadParameters(const std::string &filename);
     void saveMap();
     void exportPNG();
@@ -85,6 +85,9 @@ private:
     void newGenerationCallback();
     void saveMapCallback();
     void exportPNGCallback();
+
+    void onSeedChanged(int & newSeed);
+    void scanMaps();
 
     void updateMapLabel();
 
