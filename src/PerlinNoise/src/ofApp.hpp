@@ -17,6 +17,8 @@
 
 class ofApp : public ofBaseApp{
 public:
+    int currentMap = 1;
+
     void setup();
     void update();
     void draw();
@@ -74,6 +76,7 @@ private:
     ofxToggle rock;
     ofxToggle earth;
     ofxToggle gravel;
+    ofxLabel currentMapLabel;
         
 
 
@@ -82,7 +85,8 @@ private:
     void newGenerationCallback();
     void saveMapCallback();
     void exportPNGCallback();
-    
+
+    void updateMapLabel();
 
 private:
 

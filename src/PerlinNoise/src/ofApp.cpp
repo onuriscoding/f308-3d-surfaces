@@ -11,7 +11,7 @@ void ofApp::setup(){
     spacing = 3.0f;
     mapsDir = findMapsDir();
     perlin2D = std::make_unique<Perlin2D>(0.02,250, 13.0, 4);
-    
+
     perlinManager = std::make_unique<PerlinManager>(size3D);
     
     // --- gui setup ---
@@ -52,6 +52,8 @@ void ofApp::setup(){
     gui.add(earth.setup("earth : ", true));
     gui.add(gravel.setup("gravel : ", false));
     gui.add(rock.setup("rock : ", false));
+
+    gui.add(currentMapLabel.setup("Current Map", " 1"));
 
     mesh2D.setMode(OF_PRIMITIVE_TRIANGLES);
     
@@ -172,6 +174,8 @@ void ofApp::loadMap(int mapNumber) {
     } else {
         std::cerr << "Failed to load Map " << mapNumber << " from " << mapFile << std::endl;
     }
+    currentMap = mapNumber;
+    updateMapLabel();
 }
 
 std::unordered_map<std::string, float> ofApp::loadParameters(const std::string &filename) {
@@ -260,11 +264,25 @@ void ofApp::drawPerlin2D(){
 void ofApp::keyPressed(int key){
     if (key == OF_KEY_RETURN || key == OF_KEY_ESC) editingSeed = false;
 
-    if (!editingSeed) {
-        if (key >= '1' && key <= '9') { loadMap(key - '0'); return; }
-        if (key == '0') { loadMap(10); return; }
-    }
+    // if (!editingSeed) {
+    //     if (key >= '1' && key <= '9') { loadMap(key - '0'); return; }
+    //     if (key == '0') { loadMap(10); return; }
+    // }
 
+    if (!editingSeed) {
+        if (key == OF_KEY_RIGHT) {
+            currentMap++;
+            if (currentMap > 10) currentMap = 1;
+            loadMap(currentMap);
+            return;
+        }
+        if (key == OF_KEY_LEFT) {
+            currentMap--;
+            if (currentMap < 1) currentMap = 10;
+            loadMap(currentMap);
+            return;
+        }
+    }
     switch(key) {
         case 'f':
             ofToggleFullscreen();
@@ -464,4 +482,8 @@ void ofApp::saveMapCallback(){
 
 void ofApp::exportPNGCallback(){
     exportPNG();
+}
+
+void ofApp::updateMapLabel() {
+        currentMapLabel = ofToString(currentMap);
 }
