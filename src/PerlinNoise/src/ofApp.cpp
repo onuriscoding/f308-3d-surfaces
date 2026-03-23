@@ -62,6 +62,9 @@ void ofApp::setup(){
     // -- init meshs -- 
     initMesh2D();
     initMesh3D();
+
+    seedInput.addListener(this, &ofApp::onSeedChanged);
+
     
     ofBackground(0);
     ofSetColor(255);
@@ -73,6 +76,9 @@ void ofApp::setup(){
     splitCam2D.lookAt(glm::vec3(0,0,0));
 
     perlinManager->updateMesh(mesh3D);
+
+    mapsDir = findMapsDir();
+    scanMaps();
 }
 
 //--------------------------------------------------------------
@@ -155,26 +161,31 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 
-void ofApp::loadMap(int mapNumber) {
-    if (mapNumber < 1 || mapNumber > 10) {
-        std::cerr << "Invalid map number: " << mapNumber << ". Must be between 1 and 10." << std::endl;
+void ofApp::loadMap(int mapIndex) {
+    if (mapFiles.empty()) {
+        std::cerr << "No maps found" << std::endl;
+        return;
+    }
+
+    if (mapIndex < 0 || mapIndex >= mapFiles.size()) {
+        std::cerr << "Invalid map index" << std::endl;
         return;
     }
     
-    std::string mapFile = mapsDir + "/map" + std::to_string(mapNumber) + ".txt";
+    std::string mapFile = mapFiles[mapIndex];
     std::unordered_map<std::string, float> params = loadParameters(mapFile);
 
     if (!params.empty()) {
         setParameters(params);
-        std::cout << "Loaded Map " << mapNumber << " from " << mapFile << std::endl;
+        std::cout << "Loaded Map " << mapIndex + 1 << " from " << mapFile << std::endl;
         
         // Update both meshes so split view stays in sync
         perlin2D->updateMesh(mesh2D, height2D, width2D);
         perlinManager->updateMesh(mesh3D);
     } else {
-        std::cerr << "Failed to load Map " << mapNumber << " from " << mapFile << std::endl;
+        std::cerr << "Failed to load Map " << mapIndex << " from " << mapFile << std::endl;
     }
-    currentMap = mapNumber;
+    currentMap = mapIndex;
     updateMapLabel();
 }
 
@@ -238,6 +249,7 @@ void ofApp::setParameters(const std::unordered_map<std::string, float>& params) 
         perlinManager->createNewGeneration(newSeed);
         seedInput = static_cast<int>(newSeed);
     }
+
 }
 
 void ofApp::drawPerlin3D(){
@@ -272,13 +284,13 @@ void ofApp::keyPressed(int key){
     if (!editingSeed) {
         if (key == OF_KEY_RIGHT) {
             currentMap++;
-            if (currentMap > 10) currentMap = 1;
+            if (currentMap >= mapFiles.size()) currentMap = 0;
             loadMap(currentMap);
             return;
         }
         if (key == OF_KEY_LEFT) {
             currentMap--;
-            if (currentMap < 1) currentMap = 10;
+            if (currentMap < 0) currentMap = mapFiles.size() -1;
             loadMap(currentMap);
             return;
         }
@@ -304,6 +316,7 @@ void ofApp::keyPressed(int key){
         case 'v':
             splitView = !splitView;
             break;
+        default: ;
     }
 }
 
@@ -485,5 +498,33 @@ void ofApp::exportPNGCallback(){
 }
 
 void ofApp::updateMapLabel() {
-        currentMapLabel = ofToString(currentMap);
+        currentMapLabel = ofToString(currentMap +1);
+}
+
+void ofApp::onSeedChanged(int & newSeed) {
+    perlin2D->createNewGeneration(newSeed);
+    perlinManager->createNewGeneration(newSeed);
+
+    perlin2D->updateMesh(mesh2D, height2D, width2D);
+    perlinManager->updateMesh(mesh3D);
+}
+
+void ofApp::scanMaps() {
+    namespace fs = std::filesystem;
+
+    mapFiles.clear();
+
+    for (const auto& entry : fs::directory_iterator(mapsDir)) {
+        if (entry.path().extension() == ".txt") {
+            mapFiles.push_back(entry.path().string());
+        }
+    }
+
+    std::sort(mapFiles.begin(), mapFiles.end(),
+    [](const std::string& a, const std::string& b) {
+        return std::stoi(std::filesystem::path(a).stem().string().substr(3)) <
+               std::stoi(std::filesystem::path(b).stem().string().substr(3));
+    });
+
+    std::cout << "Found " << mapFiles.size() << " maps" << std::endl;
 }

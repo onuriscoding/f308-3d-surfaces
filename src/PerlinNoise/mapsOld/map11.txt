@@ -1,0 +1,5 @@
+scale=0.03
+amplitude=40
+octaves=5
+theta=60
+seed=0
