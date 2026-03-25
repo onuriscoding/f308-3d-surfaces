@@ -13,7 +13,12 @@ void ofApp::setup(){
     perlin2D = std::make_unique<Perlin2D>(0.02,250, 13.0, 4);
 
     perlinManager = std::make_unique<PerlinManager>(size3D);
-    
+
+    // camera rotation
+
+    mainCam.setRelativeYAxis(false);
+    mainCam.setUpAxis(glm::vec3(0, 0, 1));
+
     // --- gui setup ---
 
     movement.addListener(this, &ofApp::movementChangedCallBack);
@@ -69,7 +74,7 @@ void ofApp::setup(){
     ofBackground(0);
     ofSetColor(255);
    
-    mainCam.setPosition(0, 0, 600);
+    mainCam.setPosition(0, -400, 400);
     mainCam.lookAt(glm::vec3(0,0,0));
 
     splitCam2D.setPosition(0, 0, 600);

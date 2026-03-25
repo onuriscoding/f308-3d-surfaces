@@ -29,7 +29,7 @@ void Perlin2D::updateMesh(ofMesh &mesh, int height , int width){
             
             //noiseValue = ofMap(noiseValue, -1, 1, 0, 1);   
             
-            v.z = noiseValue * amplitude;
+            v.z = noiseValue * 3 * amplitude;
             mesh.setVertex(index, v);
             ofFloatColor c = ofFloatColor(noiseValue, 0.3, 1.0 - noiseValue);
             mesh.setColor(index, c );
