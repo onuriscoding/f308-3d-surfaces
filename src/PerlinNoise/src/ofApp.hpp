@@ -105,6 +105,7 @@ private:
     bool draggingSillSlider;
     bool draggingScale3DSlider;
     bool editingSeed = false;
+    float rotationZ = 0.0f;
 
 
     void initMesh2D();

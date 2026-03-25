@@ -257,8 +257,9 @@ void ofApp::drawPerlin3D(){
     glPointSize(5);
     glDepthMask(GL_FALSE);
     mainCam.begin();
+    ofRotateZDeg(rotationZ);
     mesh3D.draw();
-    glDepthMask(GL_TRUE); 
+    glDepthMask(GL_TRUE);
     mainCam.end();
     ofDisableDepthTest();
 }
@@ -315,6 +316,12 @@ void ofApp::keyPressed(int key){
             break;
         case 'v':
             splitView = !splitView;
+            break;
+        case '[':
+            rotationZ -= 5.0f;
+            break;
+        case ']':
+            rotationZ += 5.0f;
             break;
         default: ;
     }
@@ -412,6 +419,7 @@ void ofApp::drawSplitView(){
     glPointSize(5);
     glDepthMask(GL_FALSE);
     mainCam.begin(ofRectangle(w / 2, 0, w / 2, h));
+    ofRotateZDeg(rotationZ);
     mesh3D.draw();
     glDepthMask(GL_TRUE);
     mainCam.end();
