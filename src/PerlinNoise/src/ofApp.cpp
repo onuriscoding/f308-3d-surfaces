@@ -5,8 +5,8 @@
 
 // ===== public ===== 
 void ofApp::setup(){
-    height2D = 500;
-    width2D = 400;
+    height2D = 480;
+    width2D = 360;
     size3D = 80;
     spacing = 3.0f;
     mapsDir = findMapsDir();
@@ -30,7 +30,7 @@ void ofApp::setup(){
 
     gui.setup();
     gui.add(infoLabel.setup("controls", 
-        " u/d : Amplitude  s : Save  e : Export PNG\n 1-9 : Load map 1-9  0 : map 10\n v : Split view  f : Fullscreen\n"));
+        " u/d : Amplitude  s : Save  e : Export PNG\n v : Split view  f : Fullscreen\n"));
     gui.add(theta.setup("rotation", 140, 0, 360));
     gui.add(renderPerlin3D.setup("render 3D Perlin noise", false));
     gui.add(movement.setup("movement", false));
