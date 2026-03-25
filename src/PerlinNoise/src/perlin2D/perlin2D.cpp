@@ -8,7 +8,7 @@
 
 
 
-// ------- constructor ------- 
+// ------- constructor -------
 Perlin2D::Perlin2D(float initScale , int nUnique, float theta, unsigned int seed) : Perlin(initScale, nUnique, seed), thetaRad(theta* (2.0f * M_PI / 360.0f)), amplitude(35.0) {
     generateCells();
     generatePerms();
@@ -16,7 +16,7 @@ Perlin2D::Perlin2D(float initScale , int nUnique, float theta, unsigned int seed
 
 
 void Perlin2D::updateMesh(ofMesh &mesh, int height , int width){
-    
+
     if (movement){
         currentTime = ofGetElapsedTimef() * timeScale;
     }
@@ -24,18 +24,57 @@ void Perlin2D::updateMesh(ofMesh &mesh, int height , int width){
         for (int x = 0 ; x < width; x ++){
             int index = x + y * width;
             ofVec3f v = mesh.getVertex(index);
-        
+
             float noiseValue = fbm2D(x * scale, y * scale + currentTime);
-            
-            //noiseValue = ofMap(noiseValue, -1, 1, 0, 1);   
-            
+
+            //noiseValue = ofMap(noiseValue, -1, 1, 0, 1);
+
             v.z = noiseValue * 3 * amplitude;
             mesh.setVertex(index, v);
-            ofFloatColor c = ofFloatColor(noiseValue, 0.3, 1.0 - noiseValue);
-            mesh.setColor(index, c );
 
+            ofFloatColor c;
+
+            if (!colorMode) {
+                c = ofFloatColor(noiseValue, 0.3, 1.0 - noiseValue);
+                mesh.setColor(index, c );
+
+            } else {
+                float level = ofClamp(noiseValue, 0.0f, 1.0f);
+
+                ofFloatColor deepWater(0.00f, 0.15f, 0.55f);
+                ofFloatColor shallowWater(0.15f, 0.45f, 0.85f);
+                ofFloatColor sand(0.90f, 0.8f, 0.60f);
+                ofFloatColor grass(0.2f, 0.65f, 0.2f);
+                ofFloatColor lightRock(0.8f, 0.8f, 0.80f);
+                ofFloatColor snow(1.0f, 1.0f, 1.0f);
+                float u;
+
+                // ofMap produces a linear interpolation between 0 and 1
+                // getLerped gives a blend between 2 colors by linear interpolation
+                if (level < deepWaterLevel) {
+                    u = ofMap(level, 0.0f, deepWaterLevel, 0.0f, 1.0f, true);
+                    c = deepWater.getLerped(shallowWater, u);
+                }
+                else if (level < shallowWaterLevel) {
+                    u = ofMap(level, deepWaterLevel, shallowWaterLevel, 0.0f, 1.0f, true);
+                    c = shallowWater.getLerped(sand, u);
+                }
+                else if (level < sandLevel) {
+                    u = ofMap(level, shallowWaterLevel, sandLevel, 0.0f, 1.0f, true);
+                    c = sand.getLerped(grass, u);
+                }
+                else if (level < grassLevel) {
+                    u = ofMap(level, sandLevel, grassLevel, 0.0f, 1.0f, true);
+                    c = grass.getLerped(lightRock, u);
+                }
+                else {
+                    u = ofMap(level, grassLevel, 1.0f, 0.0f, 1.0f, true);
+                    c = lightRock.getLerped(snow, u);
+                }
+                mesh.setColor(index, c);
+            }
         }
-}
+    }
 }
 
 
@@ -101,7 +140,7 @@ void Perlin2D::generateCells(){
     std::vector<std::array<float, 2>> cellsBase ;
     for (int i = 0; i < nUnique * 2 ; i ++){
         cellsBase.push_back({(this->randomFloat() - 0.5f ) * 2.0f , (this->randomFloat() - 0.5f) *2.0f });
-    }    
+    }
     cells2D = rotateCells(cellsBase);
 
 }
@@ -116,7 +155,7 @@ void Perlin2D::generatePerms(){
 
 
 std::array<float , 2> Perlin2D::rotate(std::array<float, 2>& vect){
-    
+
     float c = std::cos(thetaRad);
     float s = std::sin(thetaRad);
     return {c* vect[0] - s* vect[1], s * vect[0] + c * vect[1]};
@@ -135,7 +174,7 @@ float Perlin2D::noise2D(float x , float y){
     int Y0 = Y% nUnique;
     int X1 = (X + 1) % nUnique;
     int Y1 = (Y + 1) % nUnique;
-    
+
 
     // get our gradiant vectors
     std::array<float, 2> g00 = cells2D[X0 + perm[Y0]];
@@ -148,16 +187,16 @@ float Perlin2D::noise2D(float x , float y){
     std::array<float , 2> d01 = {xf, yf-1};
     std::array<float, 2> d11 = {xf-1, yf-1};
 
-    // dot between the distance vect and the gradiant vectors 
+    // dot between the distance vect and the gradiant vectors
     float in00 = dot(g00, d00);
     float in10 = dot(g10, d10);
     float in01 = dot(g01, d01);
     float in11 = dot(g11, d11);
-    
+
     // interpolation First on the x axis for the top and bottom pairs of points
     float l1 = lerp(in00, in10,fade(xf));
     float l2 = lerp(in01, in11, fade(xf));
-    // then on the y axis 
+    // then on the y axis
     return lerp(l1, l2, fade(yf)) + 0.5;
 }
 

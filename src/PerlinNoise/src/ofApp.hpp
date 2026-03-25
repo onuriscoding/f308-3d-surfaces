@@ -5,6 +5,7 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofMesh.h"
+#include "ofxAssimpModelLoader.h"
 
 #include "perlinManager/perlinManager.hpp"
 
@@ -18,7 +19,10 @@
 class ofApp : public ofBaseApp{
 public:
     int currentMap = 1;
+    bool treesActive = false;
     std::vector<std::string> mapFiles;
+    ofLight light;
+
     void setup();
     void update();
     void draw();
@@ -26,7 +30,9 @@ public:
     void drawPerlin3D();
     void drawPerlin2D();
     void drawSplitView();
-    
+
+    void drawTrees();
+
     void computeNormals(ofMesh &mesh);
     void keyPressed(int key);
     void keyReleased(int key);
@@ -77,15 +83,39 @@ private:
     ofxToggle earth;
     ofxToggle gravel;
     ofxLabel currentMapLabel;
-        
 
+    ofxToggle colorMode;
+    ofxButton placeTrees;
+    ofxButton clearTreesButton;
+
+    // 3D models
+    ofxAssimpModelLoader treeModel;
+    struct Object3D {
+        // Map with width = 200
+        // posCentered : [-100;100]
+        // pos : [0; 200]
+        std::array<float,3> posCentered;
+        std::array<float,3> pos;
+        float scale =1;
+    };
+
+    std::vector<Object3D> trees;
+
+    string treeFile = "Lowpoly_tree_sample.obj";
+    int targetTreeNumber = 100;
+    int treeRescaleFactor = 0.01f;
+
+    void placeTreesCallback();
+    void removeTreesCallback();
+    void colorModeCallback(bool &value);
+
+    void generateTrees();
 
     void movementChangedCallBack(bool & value);
     void setValPerlin3DcallBack(bool & value);
     void newGenerationCallback();
     void saveMapCallback();
     void exportPNGCallback();
-
     void onSeedChanged(int & newSeed);
     void scanMaps();
 

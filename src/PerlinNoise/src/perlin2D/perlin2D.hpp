@@ -46,6 +46,11 @@ class Perlin2D : public Perlin{
         float noise2D(float x , float y);
 
     public:
+        bool colorMode = false;
+        float deepWaterLevel = 0.3f;
+        float shallowWaterLevel = 0.4f;
+        float sandLevel = 0.65f;
+        float grassLevel = 0.85f;
         /*
         brief : fractional Brownian Motion - stacks multiple octaves of noise2D
         */

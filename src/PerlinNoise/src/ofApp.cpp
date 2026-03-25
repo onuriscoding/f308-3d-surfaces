@@ -23,16 +23,16 @@ void ofApp::setup(){
 
     movement.addListener(this, &ofApp::movementChangedCallBack);
 
-    ofxGuiSetFont("mono.ttf", 26);
-    ofxGuiSetDefaultWidth(820);
-    ofxGuiSetDefaultHeight(60);
-    ofxGuiSetTextPadding(8);
+    ofxGuiSetFont("mono.ttf", 13);
+    ofxGuiSetDefaultWidth(410);
+    ofxGuiSetDefaultHeight(30);
+    ofxGuiSetTextPadding(4);
 
     gui.setup();
     gui.add(infoLabel.setup("controls", 
         " u/d : Amplitude  s : Save  e : Export PNG\n 1-9 : Load map 1-9  0 : map 10\n v : Split view  f : Fullscreen\n"));
     gui.add(theta.setup("rotation", 140, 0, 360));
-    gui.add(renderPerlin3D.setup("render 3D Perlin noise", true));
+    gui.add(renderPerlin3D.setup("render 3D Perlin noise", false));
     gui.add(movement.setup("movement", false));
     gui.add(newGeneration.setup("new noise generation "));
     gui.add(perlinScale.setup("perlin scale ",0.02, 0.001 ,0.13 ));
@@ -60,6 +60,15 @@ void ofApp::setup(){
 
     gui.add(currentMapLabel.setup("Current Map", " 1"));
 
+    colorMode.addListener(this, &ofApp::colorModeCallback);
+    placeTrees.addListener(this, &ofApp::placeTreesCallback);
+    clearTreesButton.addListener(this, &ofApp::removeTreesCallback);
+
+    gui.add(colorMode.setup("Color Mode", false));
+    gui.add(placeTrees.setup("Place Tress"));
+    gui.add(clearTreesButton.setup("Remove Trees"));
+
+
     mesh2D.setMode(OF_PRIMITIVE_TRIANGLES);
     
     ofEnableDepthTest();
@@ -84,6 +93,36 @@ void ofApp::setup(){
 
     mapsDir = findMapsDir();
     scanMaps();
+
+    treeModel.load(treeFile);
+
+    light.setup();
+    light.setPosition(300, -300, 600);
+
+    generateTrees();
+}
+
+void ofApp::generateTrees() {
+    int maxAttempts = 5000;
+    trees.clear();
+    int attempts = 0;
+
+    while (trees.size() < targetTreeNumber && attempts < maxAttempts) {
+        attempts++;
+
+        float xPos = ofRandom(0, width2D);
+        float yPos = ofRandom(0, height2D);
+
+        float xCentered =  xPos - width2D/2;
+        float yCentered = yPos - height2D/2;
+
+
+        float noiseValue = perlin2D->fbm2D(xPos * perlinScale, yPos * perlinScale);
+
+        if (noiseValue > perlin2D->shallowWaterLevel && noiseValue <= perlin2D->sandLevel) {
+            trees.push_back({{xCentered,yCentered,0},{xPos,yPos,0}, ofRandom(0.8f, 1.2f)});
+        }
+    }
 }
 
 //--------------------------------------------------------------
@@ -268,17 +307,40 @@ void ofApp::drawPerlin3D(){
     ofDisableDepthTest();
 }
 
-void ofApp::drawPerlin2D(){
+void ofApp::drawPerlin2D() {
     ofEnableDepthTest();
-    glPointSize(5);
     mainCam.begin();
     mesh2D.draw();
+    if (treesActive) drawTrees();
     mainCam.end();
     ofDisableDepthTest();
 }
 
+void ofApp::drawTrees() {
+    ofEnableLighting();
+    light.enable();
+
+    for (Object3D &tree : trees) {
+        int x = ofClamp(static_cast<int>(tree.pos[0]), 0, width2D - 1);
+        int y = ofClamp(static_cast<int>(tree.pos[1]), 0, height2D - 1);
+        int index = x + y * width2D;
+
+        float z = mesh2D.getVertex(index).z;
+
+        ofPushMatrix();
+        ofTranslate(tree.posCentered[0], tree.posCentered[1], z);
+        ofRotateXDeg(-90);
+        ofScale(tree.scale*0.01f);
+        treeModel.drawFaces();
+        ofPopMatrix();
+    }
+
+    light.disable();
+    ofDisableLighting();
+}
+
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key){
+void ofApp::keyPressed(int key) {
     if (key == OF_KEY_RETURN || key == OF_KEY_ESC) editingSeed = false;
 
     // if (!editingSeed) {
@@ -532,4 +594,18 @@ void ofApp::scanMaps() {
     });
 
     std::cout << "Found " << mapFiles.size() << " maps" << std::endl;
+}
+
+void ofApp::colorModeCallback(bool & value){
+    perlin2D->colorMode = value;
+}
+
+void ofApp::placeTreesCallback(){
+    generateTrees();
+    treesActive = true;
+}
+
+void ofApp::removeTreesCallback(){
+    trees.clear();
+    treesActive = false;
 }
