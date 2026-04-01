@@ -52,10 +52,21 @@
 %\input{} chapitres
 
 \clearpage\pagestyle{fancy}
+\section{Résumé}
+Ce projet consiste en l'implémentation d'une application qui permet de générer des cartes de bruit de Perlin en deux dimensions et trois dimensions.
+Il existe également différents paramètres qui peuvent changer la forme de la carte générée. 
+Le cœur du projet est implémenté en C++ avec la librairie visuelle \textbf{OpenFrameWorks}. 
+Puis durant les activités pédagogiques, nous avons comme matériel un bac à sable, un projecteur et un kinect que nous connectons avec \cite{ActivityApplication}. 
+Cela permettait d'essayer de reproduire une carte de Perlin de deux dimensions en mettant le relief dans le bac à sable.
+La carte de référence et celle générée par la projection sur le bac à sable sont comparées dans une application codée en Python avec la librairie \textbf{Streamlit}.
+
+\section{Introduction}
+Dans le cadre du printemps des Sciences, le sujet de ce projet se concentre sur la génération et modélisation de surfaces en trois dimensions.
+Le sujet se repose principalement sur le fonctionnement de l'algorithme de Perlin, l'étude des différents paramètres et leurs cas limites d'application. 
 
 \input{chapitres/surfaces.tex}
 \input{chapitres/parametres.tex}
-\input{chapitres/extensions.tes}
+\input{chapitres/extensions.tex}
 \nocite{*}
 \printbibliography
 
