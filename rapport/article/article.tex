@@ -1,0 +1,106 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 2.0 (February 7, 2023)
+%
+% This template originates from:
+% https://www.LaTeXTemplates.com
+%
+% Author:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+%
+% NOTE: The bibliography needs to be compiled using the biber engine.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+	a4paper, % Paper size, use either a4paper or letterpaper
+	10pt, % Default font size, can also use 11pt or 12pt, although this is not recommended
+	unnumberedsections, % Comment to enable section numbering
+	twoside, % Two side traditional mode where headers and footers change between odd and even pages, comment this option to make them fixed
+]{LTJournalArticle}
+
+\addbibresource{references.bib} % BibLaTeX bibliography file
+
+\runninghead{Shortened Running Article Title} % A shortened article title to appear in the running head, leave this command empty for no running head
+
+\footertext{\textit{Journal of Biological Sampling} (2024) 12:533-684} % Text to appear in the footer, leave this command empty for no footer text
+
+\setcounter{page}{1} % The page number of the first page, set this to a higher number if the article is to be part of an issue or larger work
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\title{\textbf{\textsc{\Huge Génération et modélisation de surfaces 3d}}} % Article title, use manual lines breaks (\\) to beautify the layout
+
+% Authors are listed in a comma-separated list with superscript numbers indicating affiliations
+% \thanks{} is used for any text that should be placed in a footnote on the first page, such as the corresponding author's email, journal acceptance dates, a copyright/license notice, keywords, etc
+\author{%
+	Ibrahim DOGAN\\ Juliette CORNU-BESSER\\ Quentin BERNARD-BOUISSIERES \\ Daniel DEFOING\\ Haluk YILMAZ \\ \textbf{Publié :} 30 avril 2026 }
+
+
+% Affiliations are output in the \date{} command
+\date{Projet d'année \\ INFO-F309\\ Année Académique 2025-2025}
+
+% Full-width abstract
+\renewcommand{\maketitlehookd}{%
+	\begin{abstract}
+		\noindent Ce projet consiste en l'implémentation d'une application qui permet de générer des cartes de bruit de Perlin en deux dimensions et trois dimensions.
+Il existe également différents paramètres qui peuvent changer la forme de la carte générée. 
+Le cœur du projet est implémenté en C++ avec la librairie visuelle \textbf{OpenFrameWorks}. 
+Puis durant les activités pédagogiques, nous avons comme matériel un bac à sable, un projecteur et un kinect que nous connectons avec \cite{ActivityApplication}. 
+Cela permettait d'essayer de reproduire une carte de Perlin de deux dimensions en mettant le relief dans le bac à sable.
+La carte de référence et celle générée par la projection sur le bac à sable sont comparées dans une application codée en Python avec la librairie \textbf{Streamlit}.
+	\end{abstract}
+}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Output the title section
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\section{Introduction}
+
+Dans le cadre du printemps des Sciences, le sujet de ce projet se concentre sur la génération et modélisation de surfaces en trois dimensions.
+Le sujet se repose principalement sur le fonctionnement de l'algorithme de Perlin, l'étude des différents paramètres et leurs cas limites d'application.
+
+%------------------------------------------------
+
+\section{Surfaces}
+
+
+%------------------------------------------------
+
+\section{Paramètres du bruit de Perlin}
+
+
+%------------------------------------------------
+
+\section{Extensions}
+
+\subsection{Optimisations}
+
+\subsection{Variantes}
+
+%----------------------------------------------------------------------------------------
+%	 REFERENCES
+%----------------------------------------------------------------------------------------
+\nocite{*}
+\printbibliography % Output the bibliography
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
