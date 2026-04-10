@@ -1,0 +1,33 @@
+\chapter{Surfaces}
+
+Ce chapitre se concentre sur le fonctionnement de l'algorithme de Perlin \cite{PerlinNoise}.
+
+\section{Bruit de Perlin}
+
+\subsection{Notion de bruit}
+Lors de l'application de l'algorithme de Perlin, le bruit est considéré comme une valeur pseudo-aléatoire générée par des coordonnées données en paramètres. 
+La valeur du bruit pourra être interprétée à des étapes ultérieures lors de la construction d'un espace. 
+% je n'aime pas cette formulation
+
+\subsection{Notion de fonction de bruit}
+
+Pour mettre en relation un ensemble de bruits, les fonctions de bruit font une interpolation entre deux valeurs, soit une moyenne. 
+Selon la fonction choisie, l'interpolation sera plus au moins douce.
+Dans le cas de l'algorithme de Perlin, nous utilisons une interpolation linéaire entre deux points.
+Le paramètre \textit{alpha} permet de jouer 
+\begin{verbatim}
+float lerp(float x,float y,float alpha):
+	return (1 - alpha)x + alpha * y
+\end{verbatim}
+
+\subsection{Fonctionnement de l'algorithme de Perlin} 
+
+L'algorithme de Perlin peut se décomposer en plusieurs étapes : définir l'espace, générer un échantillon fini de valeurs aléatoires, faire des produits scalaires et ensuite interpoler. 
+
+
+
+\subsection{Application}
+
+\subsubsection{Mouvement brownien}
+
+
