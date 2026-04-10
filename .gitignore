@@ -24,6 +24,7 @@ Thumbs.db
 
 .vscode/
 .idea/
+.claude/
 *.sublime-project
 *.sublime-workspace
 xcuserdata/
@@ -50,3 +51,6 @@ ehthumbs.db
 *.code-workspace
 /bin
 /src/BezierCurvePlayable/bin
+/src/PerlinNoise/bin
+*-Info.plist
+exports/

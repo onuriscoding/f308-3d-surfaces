@@ -1,0 +1,5 @@
+scale=0.00461829
+amplitude=1
+octaves=1
+theta=102.293
+seed=630
