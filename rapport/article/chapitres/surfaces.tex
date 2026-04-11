@@ -1,8 +1,6 @@
-\chapter{Surfaces}
+\section{Surfaces}
 
 Ce chapitre se concentre sur le fonctionnement de l'algorithme de Perlin \cite{PerlinNoise}.
-
-\section{Bruit de Perlin}
 
 \subsection{Notion de bruit}
 Lors de l'application de l'algorithme de Perlin, le bruit est considéré comme une valeur pseudo-aléatoire générée par des coordonnées données en paramètres. 
@@ -24,10 +22,33 @@ float lerp(float x,float y,float alpha):
 
 L'algorithme de Perlin peut se décomposer en plusieurs étapes : définir l'espace, générer un échantillon fini de valeurs aléatoires, faire des produits scalaires et ensuite interpoler. 
 
+\subsubsection{Définir l'espace} 
+Sur un espace donné, comme un \texttt{mesh}, nous allons le découper en des cellules conceptuelles. 
 
+\subsubsection{Vecteurs de gradient}
+Dans notre programme, nous générons au tout début une liste limité de vecteurs de gradients aléatoires  qui nous permettra réutiliser la liste. 
+Nous utilisons également une liste de permutations dont nous expliquerons l'utilisation ultérieurement.
+Pour une cellule donnée, nous avons besoin d'un vecteur de gradient pour chaque sommet.
+Pour choisir le vecteur de gradient de notre liste, nous sélectionnons le vecteur à l'indice de \texttt{floor(coordonnées e1) + permutation(coordonnées e2)}.
+
+\subsubsection{Produit scalaire}
+Nous calculons les vecteurs de distance pour chaque sommet : \texttt{coordonnées du sommet - coordonnées du point}. 
+Puis nous faisons pour chaque sommet, le produit scalaire entre le vecteur de distance et le vecteur de gradient du sommet en question. 
+Nous nous retrouvons avec autant de valeurs de produit scalaire qu'il n'y a de sommets pour la cellule donnée.
+
+\subsubsection{Interpolation}
+Nous avons vu au-dessus que nous ne travaillons qu'avec un bruit, soit une valeur. 
+Afin de rassembler les valeurs de produits scalaires ensemble pour une cellule donnée, nous allons regrouper les valeurs en faisant une interpolation linéaire. 
+Le troisième paramètre de la fonction \texttt{lerp} est sur quel axe nous souhaitons interpoler. 
+Sa valeur est la partie décimale de la composante de la coordonnée. 
 
 \subsection{Application}
 
+Pour créer des résultats plus riches en peu de ressources, nous produisons une simple fonction de bruit en fonction fractale de bruit. 
+
 \subsubsection{Mouvement brownien}
+
+Si nous souhaitons modifier l'allure de la fonction de bruit, nous allons additionner des fonctions du bruit de perlin qui prennent des paramètres différents. 
+Pour certaines, la 
 
 
