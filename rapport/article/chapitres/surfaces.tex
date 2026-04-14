@@ -48,7 +48,20 @@ Pour créer des résultats plus riches en peu de ressources, nous produisons une
 
 \subsubsection{Mouvement brownien}
 
-Si nous souhaitons modifier l'allure de la fonction de bruit, nous allons additionner des fonctions du bruit de perlin qui prennent des paramètres différents. 
-Pour certaines, la 
-
-
+Si nous voyons notre fonction de bruit comme une fonction périodique  définie par son amplitude, sa fréquence et sa longueur d'onde. 
+Comme expliqué dans la partie de \textit{Layering Noise} de cet article \cite{Student_Level_Explanation_PerlinNoise}, nous allons superposerla fonction de bruit mais avec des valeurs de fréquences et d'amplitude différentes. 
+Le nombre de fonctions de bruit que nous superposons avec des fréquences différentes est appelé le nombre d'octaves. 
+Mais théoriquement lorsque nous doublons la fréquence de la fonction de bruit, l'amplitude originale se trouve diviser par deux. 
+Afin de contrer cela, le paramètre utilisé est la persistence. 
+Elle permet de définir à quel point l'amplitude diminue et elle prend valeur entre 0 et 1. 
+La valeur finale est la somme des différentes valeurs de la fonction de bruit multipliées par la persistence divisée par la somme des amplitudes. 
+% parler du paramètre lacunarity
+\begin{verbatim}
+	for (int i = 0; i < octaves; i++){
+		total += noise(vectorCoord) * amp;
+		maxValue += amp;
+		frequence *= lacunarity;
+		amp *= persistence;
+	}
+	return total / maxValue;
+\end{verbatim}
