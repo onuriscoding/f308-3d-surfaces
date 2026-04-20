@@ -1,7 +1,39 @@
 \section{Paramètres de configuration du bruit de Perlin}
 
-\subsection{Configuration}
+\subsection{Amplitude}
 
-\subsubsection{Amplitude}
+Nous montrons le paramètre amplitude pour le cas de surfaces avec perlin en deux dimensions. 
+Pour une amplitude donnée, nous l'associons à la valeur maximale de la fonction de bruit puis nous la représentons sur l'axe de dimension non utilisé. 
+Pour les autres valeurs sur la surface, nous allons associer une valeur proportionnelle à la fonction de bruit et l'amplitude maximale. 
+Malheureusement avec perlin en trois dimensions, il est compliqué de représenter le paramètre d'amplitude puisque les trois axes sont déjà utilisés pour la représentation. 
+Il est possible d'utiliser l'intensité de la couleur pour représenter éventuellement l'amplitude. 
+Si l'intensité de la couleur n'est pas déjà utilisé pour un autre cas.
 
-\subsubsection{Rotation des vecteurs de gradient};
+\subsection{Rotation des vecteurs de gradient}
+
+Le paramètre de rotation  prend des valeurs entre $0$ à $360$ degrés.
+Si le paramètre a une valeur de $0$ ou $360$, la nouvelle surface générée est identique à l'originale. 
+Mais si ce sont de valeurs dans ces bornes (exclues), nous allons rajouter à tous les vecteurs de gradient le même angle de rotation.
+Donc les vecteurs de distance restent identiques mais tous les vecteurs de gradient ont changé de la même unité. 
+Les produits scalaire vont changer de la même unité en gardant la même structure de la surface générée mais en associant des valeurs différentes.
+
+\subsection{Nombre de vecteurs de gradient}
+
+Bien que notre implémentation n'a pas su montrer de visualisation directe pour modifier ce paramètre, le nombre de vecteurs de gradient permet de définir une limite de combien de vecteurs aléatoires nous générons. 
+
+\subsubsection{Cas limites}
+
+Nous retrouvons un cas limite dans le nombre de vecteurs que nous n'avons pas su gérer dans notre implémentation. 
+Le cas limite est quand le nombre de vecteurs de gradients est divisible par le nombre de vecteurs de gradient que nous avons besoin. 
+La surface générée présente alors une droite distincte où la fonction de bruit est discontinue. 
+Pour de futures implémentations, pour gérer ce cas limites, nous avons pensé à une vérification de cette condition d'apparition.
+Si la condition est vérifiée, nous pouvons temporairement allonger la liste de vecteurs de gradient par des vecteurs déjà existant afin que la taille de liste de vecteurs de gradient ne divise pas le nombre de vecteurs de gradient nécessaires.
+
+\subsection{Conditions d'apparition}
+
+Un autre paramètre utilisé dans notre implémentation pour Perlin en trois dimensions est la condition d'apparition. 
+Il existe différents types de conditions d'apparition.
+
+\subsubsection{Valeur seuil}
+
+\subsubsection{Restriction de zone}

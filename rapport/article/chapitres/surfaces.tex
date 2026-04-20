@@ -12,7 +12,6 @@ La valeur du bruit pourra être interprétée à des étapes ultérieures lors d
 Pour mettre en relation un ensemble de bruits, les fonctions de bruit font une interpolation entre deux valeurs, soit une moyenne. 
 Selon la fonction choisie, l'interpolation sera plus au moins douce.
 Dans le cas de l'algorithme de Perlin, nous utilisons une interpolation linéaire entre deux points.
-Le paramètre \textit{alpha} permet de jouer 
 \begin{verbatim}
 float lerp(float x,float y,float alpha):
 	return (1 - alpha)x + alpha * y
@@ -26,7 +25,8 @@ L'algorithme de Perlin peut se décomposer en plusieurs étapes : définir l'esp
 Sur un espace donné, comme un \texttt{mesh}, nous allons le découper en des cellules conceptuelles. 
 
 \subsubsection{Vecteurs de gradient}
-Dans notre programme, nous générons au tout début une liste limité de vecteurs de gradients aléatoires  qui nous permettra réutiliser la liste. 
+Dans notre programme, nous générons au tout début une liste limité de vecteurs de gradients aléatoires qui nous permettra réutiliser la liste. 
+Les vecteurs de gradient générés prennent des coordoonnées dans l'intervalle $[-1;1]$, ce qui permet de garder un peu de consistence lors de l'exécution de l'algorithme. 
 Nous utilisons également une liste de permutations dont nous expliquerons l'utilisation ultérieurement.
 Pour une cellule donnée, nous avons besoin d'un vecteur de gradient pour chaque sommet.
 Pour choisir le vecteur de gradient de notre liste, nous sélectionnons le vecteur à l'indice de \texttt{floor(coordonnées e1) + permutation(coordonnées e2)}.
@@ -42,26 +42,3 @@ Afin de rassembler les valeurs de produits scalaires ensemble pour une cellule d
 Le troisième paramètre de la fonction \texttt{lerp} est sur quel axe nous souhaitons interpoler. 
 Sa valeur est la partie décimale de la composante de la coordonnée. 
 
-\subsection{Application}
-
-Pour créer des résultats plus riches en peu de ressources, nous produisons une simple fonction de bruit en fonction fractale de bruit. 
-
-\subsubsection{Mouvement brownien}
-
-Si nous voyons notre fonction de bruit comme une fonction périodique  définie par son amplitude, sa fréquence et sa longueur d'onde. 
-Comme expliqué dans la partie de \textit{Layering Noise} de cet article \cite{Student_Level_Explanation_PerlinNoise}, nous allons superposerla fonction de bruit mais avec des valeurs de fréquences et d'amplitude différentes. 
-Le nombre de fonctions de bruit que nous superposons avec des fréquences différentes est appelé le nombre d'octaves. 
-Mais théoriquement lorsque nous doublons la fréquence de la fonction de bruit, l'amplitude originale se trouve diviser par deux. 
-Afin de contrer cela, le paramètre utilisé est la persistence. 
-Elle permet de définir à quel point l'amplitude diminue et elle prend valeur entre 0 et 1. 
-La valeur finale est la somme des différentes valeurs de la fonction de bruit multipliées par la persistence divisée par la somme des amplitudes. 
-% parler du paramètre lacunarity
-\begin{verbatim}
-	for (int i = 0; i < octaves; i++){
-		total += noise(vectorCoord) * amp;
-		maxValue += amp;
-		frequence *= lacunarity;
-		amp *= persistence;
-	}
-	return total / maxValue;
-\end{verbatim}

@@ -1,5 +1,46 @@
-\section{Extensions}
+\section{Variantes}
 
-\subsection{Optimisation}
+\subsection{Mouvement brownien}
 
-\subsection{Variantes}
+Pour créer des résultats plus riches en peu de ressources, nous produisons une simple fonction de bruit en fonction fractale de bruit. 
+
+Si nous voyons notre fonction de bruit comme une fonction périodique  définie par son amplitude, sa fréquence et sa longueur d'onde. 
+Comme expliqué dans la partie de \textit{Layering Noise} de cet article \cite{Student_Level_Explanation_PerlinNoise}, nous allons superposerla fonction de bruit mais avec des valeurs de fréquences et d'amplitude différentes. 
+Le nombre de fonctions de bruit que nous superposons avec des fréquences différentes est appelé le nombre d'octaves. 
+Le paramètre \texttt{lacunarity} qui permet d'augmenter la précision des détails sur la fonction de bruit à chaque fois que nous souhaitons superposer une nouvelle fréquence. 
+La valeur finale est normalisée pour que le résultat ne dépende pas directement du nombre d'octaves. 
+La valeur utilisée est la somme des différentes valeurs de la fonction de bruit multipliées par la persistence divisée par la somme des amplitudes. 
+Cela garantit que le résultat reste dans un intervalle comparable à la fonction de bruit initiale.
+\begin{verbatim}
+	for (int i = 0; i < octaves; i++){
+		total += noise(vectorCoord) * amp;
+		maxValue += amp;
+		frequence *= lacunarity;
+		amp *= persistence;
+	}
+	return total / maxValue;
+\end{verbatim}
+
+\subsubsection{Observation}
+
+Plus le nombre d'octaves est grand, plus la surface est détaillée et rugueuse.
+En effet, l'ajout de fréquences très élévées (multipliées à chaque itération) peut dépasser la résolution du maillage. 
+Ainsi les détails deviennent trop fins pour être correctement échantillonés. 
+La surface générée est dominée par les hautes fréquence et sa représentation donnerait un resultat irrégulier.
+
+\subsubsection{Interprétation}
+
+Sans implémentation pour gérer ce problème, au-delà un certain nombre d'octaves, nous n'avons plus de modification visuelle.
+Théoriquement lorsque nous doublons la fréquence de la fonction de bruit, l'amplitude originale se trouve diviser par deux. 
+Afin de contrer cela, le paramètre utilisé est la persistence. 
+Elle permet de définir à quel point l'amplitude diminue et elle prend valeur entre 0 et 1. 
+Cela permet de diminuer progressivement l'importance des détails fins. 
+
+\subsection{Réapplication de Perlin}
+
+En reprenant l'idée d'implémentation dans cet article~\cite{Inspi_Visualiser_PerlinNoise}, nous avons décidé de superposer différentes application de Perlin avec des valeurs différentes lorsque nous utilisons Perlin en trois dimensions.
+Cela permet d'avoir des fonctions de bruit qui coexistent ensemble avec des paramétrisation différentes.
+Premièrement nous calculons pour chaque application la valeur du bruit.
+Puis nous utilisons un \texttt{mask} qui permet de mélanger les différentes valeurs de bruit selon leur couleur attribuée avec une fonction \texttt{smoothstep} qui garantit une transition propre et controlée. 
+
+
