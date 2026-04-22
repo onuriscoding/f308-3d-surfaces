@@ -36,4 +36,11 @@ Il existe différents types de conditions d'apparition.
 
 \subsubsection{Valeur seuil}
 
+Si nous souhaitons mettre des conditions sur la valeur de bruit, il est possible de définir une valeur seuil. 
+Si la valeur seuil est grande, moins de bruits de perlin seront représentés.
+À l'inverse, une valeur seuil petite est moins restrictement donc la carte générée est plus fournie dans ce cas-ci. 
+
 \subsubsection{Restriction de zone}
+
+Pour une restriction de zone, nous ne représentons pas le bruit de perlin au-delà d'une coordonnée définie sur un axe. 
+Afin de ne pas avoir une coupure nette, nous faisons une transition près de la zone délimitée et représentons quelques valeurs de bruit de perlin. 
