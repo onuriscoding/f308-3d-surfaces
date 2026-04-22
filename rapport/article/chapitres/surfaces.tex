@@ -3,42 +3,59 @@
 Ce chapitre se concentre sur le fonctionnement de l'algorithme de Perlin \cite{PerlinNoise}.
 
 \subsection{Notion de bruit}
-Lors de l'application de l'algorithme de Perlin, le bruit est considéré comme une valeur pseudo-aléatoire générée par des coordonnées données en paramètres. 
-La valeur du bruit pourra être interprétée à des étapes ultérieures lors de la construction d'un espace. 
-% je n'aime pas cette formulation
+
+Dans le cadre de l’algorithme de Perlin, le bruit correspond à une fonction pseudo-aléatoire déterministe qui associe une valeur scalaire à des coordonnées données.
+Contrairement à un bruit purement aléatoire, cette fonction garantit une continuité spatiale : des points proches dans l’espace produisent des valeurs proches.
+
+Ces valeurs de bruit peuvent ensuite être interprétées à différentes étapes de la modélisation, par exemple pour générer des hauteurs dans un relief, des textures ou d’autres caractéristiques d’un espace.
 
 \subsection{Notion de fonction de bruit}
 
-Pour mettre en relation un ensemble de bruits, les fonctions de bruit font une interpolation entre deux valeurs, soit une moyenne. 
-Selon la fonction choisie, l'interpolation sera plus au moins douce.
-Dans le cas de l'algorithme de Perlin, nous utilisons une interpolation linéaire entre deux points.
+Afin de produire un bruit continu à partir de valeurs discrètes, les fonctions de bruit reposent sur des mécanismes d’interpolation entre plusieurs valeurs.
+
+L’interpolation consiste à calculer une valeur intermédiaire entre deux (ou plusieurs) points.
+Selon la fonction utilisée, la transition peut être plus ou moins lisse.
+
+Dans sa forme la plus simple, l’interpolation linéaire (ou \textit{linear interpolation}) est définie par :
 \begin{verbatim}
-float lerp(float x,float y,float alpha):
-	return (1 - alpha)x + alpha * y
+float lerp(float x, float y, float alpha):
+    return (1 - alpha) * x + alpha * y
 \end{verbatim}
+
+Cependant, dans l’algorithme de Perlin, cette interpolation linéaire est combinée avec une fonction de lissage (souvent appelée \textit{fade function}) afin d’assurer la continuité des dérivées et d’obtenir un rendu visuellement plus naturel.
 
 \subsection{Fonctionnement de l'algorithme de Perlin} 
 
-L'algorithme de Perlin peut se décomposer en plusieurs étapes : définir l'espace, générer un échantillon fini de valeurs aléatoires, faire des produits scalaires et ensuite interpoler. 
+L’algorithme de Perlin peut être décomposé en plusieurs étapes : la discrétisation de l’espace, l’attribution de vecteurs de gradient, le calcul de produits scalaires, puis l’interpolation des valeurs obtenues.
 
 \subsubsection{Définir l'espace} 
-Sur un espace donné, comme un \texttt{mesh}, nous allons le découper en des cellules conceptuelles. 
+
+L’espace de travail (par exemple un \texttt{mesh}) est subdivisé en cellules régulières formant une grille. Chaque point de l’espace appartient ainsi à une cellule définie par ses sommets.
 
 \subsubsection{Vecteurs de gradient}
-Dans notre programme, nous générons au tout début une liste limité de vecteurs de gradients aléatoires qui nous permettra réutiliser la liste. 
-Les vecteurs de gradient générés prennent des coordoonnées dans l'intervalle $[-1;1]$, ce qui permet de garder un peu de consistence lors de l'exécution de l'algorithme. 
-Nous utilisons également une liste de permutations dont nous expliquerons l'utilisation ultérieurement.
-Pour une cellule donnée, nous avons besoin d'un vecteur de gradient pour chaque sommet.
-Pour choisir le vecteur de gradient de notre liste, nous sélectionnons le vecteur à l'indice de \texttt{floor(coordonnées e1) + permutation(coordonnées e2)}.
+
+Une table finie de vecteurs de gradient est générée au préalable.
+Dans notre implémentation, ces vecteurs sont généralement bornés dans l’intervalle $[-1,1]$ pour chaque composante, mais peuvent être également normalisés.
+
+Afin d’éviter des motifs répétitifs trop visibles, une table de permutations est utilisée pour indexer pseudo-aléatoirement ces vecteurs de gradient.
+
+Pour chaque sommet d’une cellule, un vecteur de gradient est associé en fonction de ses coordonnées entières, typiquement via une fonction de hachage basée sur la table de permutations.
 
 \subsubsection{Produit scalaire}
-Nous calculons les vecteurs de distance pour chaque sommet : \texttt{coordonnées du sommet - coordonnées du point}. 
-Puis nous faisons pour chaque sommet, le produit scalaire entre le vecteur de distance et le vecteur de gradient du sommet en question. 
-Nous nous retrouvons avec autant de valeurs de produit scalaire qu'il n'y a de sommets pour la cellule donnée.
+
+Pour un point donné à l’intérieur d’une cellule, on calcule les vecteurs de distance entre ce point et chacun des sommets de la cellule :
+\[
+\vec{d} = \text{position du point} - \text{position du sommet}.
+\]
+
+On calcule ensuite, pour chaque sommet, le produit scalaire entre ce vecteur de distance et le vecteur de gradient associé. 
+Cela produit une valeur scalaire par sommet.
 
 \subsubsection{Interpolation}
-Nous avons vu au-dessus que nous ne travaillons qu'avec un bruit, soit une valeur. 
-Afin de rassembler les valeurs de produits scalaires ensemble pour une cellule donnée, nous allons regrouper les valeurs en faisant une interpolation linéaire. 
-Le troisième paramètre de la fonction \texttt{lerp} est sur quel axe nous souhaitons interpoler. 
-Sa valeur est la partie décimale de la composante de la coordonnée. 
 
+Les valeurs obtenues aux sommets sont ensuite interpolées afin d’obtenir une valeur unique pour le point considéré.
+
+L’interpolation se fait progressivement selon chaque axe (par exemple en 2D : d’abord selon $x$, puis selon $y$). 
+Le paramètre d’interpolation correspond à la partie fractionnaire des coordonnées du point dans la cellule.
+
+Dans l’algorithme de Perlin, une fonction de lissage (telle que la fonction \textit{fade}) est appliquée à ces paramètres avant interpolation, afin de garantir une transition douce entre les cellules et éviter les discontinuités visibles.

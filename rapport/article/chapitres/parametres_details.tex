@@ -4,55 +4,67 @@ Dans cette partie, nous allons discuter sur un des paramètres qui jouent sur le
 
 \subsection{Fréquence}
 
-Un des paramètres du bruit de Perlin est la fréquence dans une grille d'échantillonnage discrète.
-Dans notre implémentation, nous avons appelé improprement ce paramètre \texttt{scale}.  
-Ce paramètre joue sur le nombre de points dans une cellule conceptuelle.
-Plus il y aura de points dans une cellule, plus les valeurs dans la cellulle donnée vont avoir des valeurs proches l'une de l'autre. 
+Un des paramètres fondamentaux du bruit de Perlin est la fréquence d’échantillonnage. 
+Dans notre implémentation, ce paramètre est désigné (de manière impropre) par \texttt{scale}, car il agit comme un facteur de mise à l’échelle des coordonnées d’entrée.
+
+Concrètement, la fréquence intervient dans l’évaluation de la fonction de bruit sous la forme :
+\[
+\texttt{noise}(x \cdot \textit{freq},\; y \cdot \textit{freq}).
+\]
+
+Ce paramètre contrôle la densité des variations du bruit dans l’espace : une fréquence élevée produit des variations rapides (détails fins), tandis qu’une fréquence faible produit des variations lentes (structures larges).
 
 \subsubsection{Cas limites}
 
-Nous étudierons les différents intervalles de la fréquence, \textit{freq} pour l'évaluation de la fonction \texttt{noise (x * freq, y * freq)} où $x,y \in \mathbb{N}$. 
+Nous étudions différents régimes de la fréquence \textit{freq}, en considérant son effet sur l’évaluation de la fonction de bruit.
 
-\subsubsection*{Fréquence prend des valeurs entières}
-
-\begin{itemize}
-	\item Les points évalués pour la fonction de bruit sont des valeurs entières, donc $\in \mathbb{Z}^2$. Or dans l'algorithme, ces coordonnées correspondent aux intersections des cellules de la grille interne.
-	\item Dés lors, les vecteurs de distance calculés sont nuls et le produit scalaire est nul.
-	\item L'interpolation entre valeurs nulles donne un résultat nul. Sur toute la grille, notre fonction de bruit est nulle et donne une surface monochrome puisque la fonction de bruit est constante en tout point.
-	\item Cela produit une surface de couleur monochrome.
-	\item Il s'agit d'un phénomène d'alignement entre la grille d'échantillonnage et la grille interne du bruit.
-
-\end{itemize}
+\subsubsection*{Fréquence entière}
 
 \begin{itemize}
-		
-\item Dans le cas où \texttt{freq = 0}, nous appliquons la fonction de bruit pour le même point, soit $(0,0)$.
-\item Pour  le cas où \texttt{freq = 1}, nous calculons la fonction de bruit pour chaque intersection de cellules distinctes.
-\item Alors que dans le cas où \texttt{freq > 1}
-	\begin{itemize}
-		\item Nous ne calculons pas la fonction de bruit  sur toutes les intersections mais pour toutes les $freq$ intersections de cellules.
-	\end{itemize}
-
+    \item Lorsque \textit{freq} est un entier et que les coordonnées $(x,y)$ sont entières, les points évalués appartiennent à $\mathbb{Z}^2$.
+    \item Ces points correspondent aux sommets de la grille interne de l’algorithme de Perlin.
+    \item Dans ce cas, les vecteurs de distance entre le point évalué et les sommets sont nuls.
+    \item Par conséquent, les produits scalaires sont nuls, et l’interpolation de ces valeurs donne un résultat nul.
+    \item La fonction de bruit est donc constante sur toute la grille, ce qui produit une surface uniforme (monochrome).
+    \item Ce phénomène résulte d’un alignement entre la grille d’échantillonnage et la grille interne du bruit.
 \end{itemize}
 
-\subsubsection*{Fréquence prend des valeurs avec une partie décimale non nulle}
+Cas particuliers :
+\begin{itemize}
+    \item \texttt{freq = 0} : la fonction est évaluée en un point constant (souvent $(0,0)$), produisant une valeur constante.
+    \item \texttt{freq = 1} : évaluation uniquement aux sommets de la grille interne, menant également à une fonction constante.
+    \item \texttt{freq > 1} (entier) : seuls certains sommets sont échantillonnés (selon un pas plus large), mais le phénomène de nullité persiste.
+\end{itemize}
+
+\subsubsection*{Fréquence non entière}
 
 \begin{itemize}
-	\item Fréquence tend vers 0, en restant strictement différent de 0
-		\begin{itemize}
-			\item Le domaine de la fonction de bruit est plus grand. Cela se traduit par un plus grand nombre de points pour une seule cellule donnée de la grille interne de Perlin.
-			\item Pour des points voisins dans une cellule donnée, leurscoordonnées sont très proches.
-			\item Les valeurs de bruit pour les différents points dans une cellules données varient très peu puisque leurs vecteurs de distance sont proches en valeurs pour les mêmes vecteurs de gradient.
-			\item Dés lors, la variation de la fonction de bruit devient extrêmement faible. Ce qui donne visuellement une surface presque monochrome, proche du cas où \texttt{freq = 0}.
-		\end{itemize}
-
-	\item Fréquence prend des valeurs non entières : $freq \in \mathbb{Q}^+ \backslash \mathbb{N}$ 
-	\begin{itemize}
-		\item Pour les points considérés en paramètres de \texttt{noise (x * freq, y * freq)}, la fonction de bruit s'applique sur des points à l'intérieur des cellules.
-		\item Dés lors, les vecteurs de distance sont différents de $\vec{0}$ et le produit scalaire est différent de $0$. 
-		\item Mais si la partie fractionnaire est proche de $0$, les points considérés sont proches des coins de cellules. Les variations sont faibles et nous avons un risque de quasi-dégénérescence. 
-		\item De plus, lorsque la fréquence augmente, nous utilisons moins de points et donc moins de vecteurs de gradient. Ce qui peut entrainer des problèmes de repliement spectral (\textit{aliasing}). %+ expliquer
-	\end{itemize}
+    \item Lorsque \textit{freq} n’est pas entier, les points $(x \cdot \textit{freq}, y \cdot \textit{freq})$ se situent à l’intérieur des cellules de la grille de Perlin.
+    \item Les vecteurs de distance sont alors non nuls, ce qui produit des produits scalaires non nuls et donc une variation du bruit.
 \end{itemize}
 
+\paragraph{Fréquence faible ($\textit{freq} \to 0^+$)}
+\begin{itemize}
+    \item Les coordonnées d’entrée varient très lentement dans l’espace de bruit.
+    \item Les points voisins sont évalués dans des régions très proches.
+    \item Les valeurs de bruit varient donc très peu localement.
+    \item Visuellement, la surface apparaît presque uniforme, avec de très larges variations.
+\end{itemize}
 
+\paragraph{Fréquence modérée (non entière)}
+\begin{itemize}
+    \item Le bruit présente des variations continues et structurées.
+    \item C’est le régime le plus utile pour la génération de textures naturelles.
+\end{itemize}
+
+\paragraph{Fréquence élevée}
+\begin{itemize}
+    \item Les variations du bruit deviennent très rapides.
+    \item Si la fréquence dépasse la capacité d’échantillonnage (résolution du maillage ou de l’image), des artefacts apparaissent.
+    \item Ce phénomène est appelé repliement spectral (\textit{aliasing}) : les hautes fréquences sont mal représentées et peuvent produire des motifs erronés ou instables.
+\end{itemize}
+
+\subsubsection{Remarque}
+
+Contrairement à une intuition possible, une augmentation de la fréquence ne réduit pas le nombre de vecteurs de gradient utilisés.
+Elle augmente en réalité la vitesse de variation du signal dans l’espace, ce qui peut poser des problèmes d’échantillonnage si la résolution est insuffisante.

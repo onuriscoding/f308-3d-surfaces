@@ -52,14 +52,13 @@
 
 % Full-width abstract
 \renewcommand{\maketitlehookd}{%
-	\begin{abstract}
-		\noindent Ce projet consiste en l'implémentation d'une application qui permet de générer des cartes de bruit de Perlin en deux dimensions et trois dimensions.
-Il existe également différents paramètres qui peuvent changer la forme de la carte générée. 
-Le cœur du projet est implémenté en C++ avec la librairie visuelle \textbf{OpenFrameWorks}. 
-		Puis durant les activités pédagogiques, nous avons comme matériel un bac à sable, un projecteur et un kinect que nous connectons avec l'application (\cite{ActivityApplication}). 
-Cela permettait d'essayer de reproduire une carte de Perlin de deux dimensions en mettant le relief dans le bac à sable.
-La carte de référence et celle générée par la projection sur le bac à sable sont comparées dans une application codée en Python avec la librairie \textbf{Streamlit}.
-	\end{abstract}
+    \begin{abstract}
+        \noindent Ce projet porte sur l’implémentation d’une application permettant de générer des cartes de bruit de Perlin en deux et en trois dimensions. Divers paramètres sont proposés afin de modifier la forme des cartes produites. 
+
+        Le cœur du projet est développé en C++ à l’aide de la bibliothèque graphique \textbf{OpenFrameworks}. Dans le cadre des activités pédagogiques, un dispositif composé d’un bac à sable, d’un projecteur et d’un capteur Kinect est utilisé et interfacé avec l’application (\cite{ActivityApplication}). Ce système permet de reproduire physiquement une carte de bruit de Perlin bidimensionnelle en modélisant le relief dans le sable. 
+
+        La carte de référence est ensuite comparée à celle obtenue par projection sur le bac à sable au moyen d’une application développée en Python avec la bibliothèque \textbf{Streamlit}.
+    \end{abstract}
 }
 
 %----------------------------------------------------------------------------------------
@@ -69,13 +68,13 @@ La carte de référence et celle générée par la projection sur le bac à sabl
 \maketitle % Output the title section
 
 %----------------------------------------------------------------------------------------
-%	ARTICLE CONTENTS
+%       ARTICLE CONTENTS
 %----------------------------------------------------------------------------------------
 
 \section{Introduction}
 
-Dans le cadre du printemps des Sciences, le sujet de ce projet se concentre sur la génération et modélisation de surfaces en trois dimensions.
-Le sujet se repose principalement sur le fonctionnement de l'algorithme de Perlin, l'étude des différents paramètres et leurs cas limites d'application.
+Dans le cadre du Printemps des Sciences, ce projet s’inscrit dans une démarche de génération et de modélisation de surfaces tridimensionnelles.
+Il repose principalement sur l’étude du fonctionnement de l’algorithme de Perlin, ainsi que sur l’analyse de ses différents paramètres et de leurs cas limites d’application.
 
 %------------------------------------------------
 
@@ -87,16 +86,15 @@ Le sujet se repose principalement sur le fonctionnement de l'algorithme de Perli
 \input{chapitres/parametres_config.tex}
 \input{chapitres/parametres_details.tex}
 
-
 %------------------------------------------------
 
 \section{Conclusion}
 
-Nous avons expliqué comment fonctionne l'algorithme de Perlin pour générer des cartes de bruit.
-Nous avons discuté les extensions de Perlin avec différentes conditions de réapplication de Perlin : les octaves et la superposition de différentes paramétrisations.
-Finalement, nous avons discuté des paramètres de configuration de l'algorithme et puis une étude approfondie sur la fréquence. 
-Pour approfondir la réflexion, nous pouvons nous pencher sur d'autres algorithmes de bruit.
+Ce travail a permis de présenter le fonctionnement de l’algorithme de Perlin pour la génération de cartes de bruit.
+Nous avons également abordé ses extensions, notamment à travers l’utilisation des octaves et la superposition de différentes paramétrisations.
+Enfin, une analyse des paramètres de configuration a été proposée, avec une attention particulière portée à la fréquence.
 
+Dans une perspective d’approfondissement, il serait pertinent d’explorer d’autres algorithmes de génération de bruit.
 %----------------------------------------------------------------------------------------
 %	 REFERENCES
 %----------------------------------------------------------------------------------------

@@ -2,45 +2,58 @@
 
 \subsection{Amplitude}
 
-Nous montrons le paramètre amplitude pour le cas de surfaces avec perlin en deux dimensions. 
-Pour une amplitude donnée, nous l'associons à la valeur maximale de la fonction de bruit puis nous la représentons sur l'axe de dimension non utilisé. 
-Pour les autres valeurs sur la surface, nous allons associer une valeur proportionnelle à la fonction de bruit et l'amplitude maximale. 
-Malheureusement avec perlin en trois dimensions, il est compliqué de représenter le paramètre d'amplitude puisque les trois axes sont déjà utilisés pour la représentation. 
-Il est possible d'utiliser l'intensité de la couleur pour représenter éventuellement l'amplitude. 
-Si l'intensité de la couleur n'est pas déjà utilisé pour un autre cas.
+L’amplitude contrôle l’intensité des variations du bruit de Perlin. En deux dimensions, elle peut être interprétée comme la hauteur maximale d’une surface, la valeur du bruit étant utilisée pour moduler le relief.
+
+En trois dimensions, cette interprétation directe n’est plus possible puisque les axes spatiaux sont déjà utilisés. 
+L’amplitude peut alors être représentée indirectement, par exemple à l’aide de la couleur ou de son intensité, sous réserve que ces canaux ne soient pas déjà utilisés pour encoder d’autres informations.
 
 \subsection{Rotation des vecteurs de gradient}
 
-Le paramètre de rotation  prend des valeurs entre $0$ à $360$ degrés.
-Si le paramètre a une valeur de $0$ ou $360$, la nouvelle surface générée est identique à l'originale. 
-Mais si ce sont de valeurs dans ces bornes (exclues), nous allons rajouter à tous les vecteurs de gradient le même angle de rotation.
-Donc les vecteurs de distance restent identiques mais tous les vecteurs de gradient ont changé de la même unité. 
-Les produits scalaire vont changer de la même unité en gardant la même structure de la surface générée mais en associant des valeurs différentes.
+Un paramètre de rotation peut être appliqué aux vecteurs de gradient, avec des valeurs comprises entre $0$ et $360$ degrés.
+
+Lorsque l’angle de rotation est nul (ou un multiple de $360$), la surface générée reste inchangée.
+En revanche, pour toute autre valeur, tous les vecteurs de gradient sont soumis à une rotation identique.
+
+Les vecteurs de distance, quant à eux, ne sont pas modifiés. 
+Par conséquent, les produits scalaires changent, ce qui entraîne une modification des valeurs du bruit.
+Néanmoins, la structure globale de la surface reste similaire, bien que les motifs puissent apparaître déformés ou orientés différemment.
 
 \subsection{Nombre de vecteurs de gradient}
 
-Bien que notre implémentation n'a pas su montrer de visualisation directe pour modifier ce paramètre, le nombre de vecteurs de gradient permet de définir une limite de combien de vecteurs aléatoires nous générons. 
+Dans notre implémentation, le nombre de vecteurs de gradient correspond à la taille de la table de gradients pré-générés.
+Cette table est utilisée pour associer, via une fonction de hachage (souvent basée sur une permutation), un vecteur de gradient à chaque sommet de la grille.
+
+Ce paramètre influence la diversité des directions possibles pour les gradients. 
+Une table de petite taille peut introduire des répétitions visibles dans le bruit, tandis qu’une table plus grande permet de réduire ces artefacts périodiques.
 
 \subsubsection{Cas limites}
 
-Nous retrouvons un cas limite dans le nombre de vecteurs que nous n'avons pas su gérer dans notre implémentation. 
-Le cas limite est quand le nombre de vecteurs de gradients est divisible par le nombre de vecteurs de gradient que nous avons besoin. 
-La surface générée présente alors une droite distincte où la fonction de bruit est discontinue. 
-Pour de futures implémentations, pour gérer ce cas limites, nous avons pensé à une vérification de cette condition d'apparition.
-Si la condition est vérifiée, nous pouvons temporairement allonger la liste de vecteurs de gradient par des vecteurs déjà existant afin que la taille de liste de vecteurs de gradient ne divise pas le nombre de vecteurs de gradient nécessaires.
+Nous avons observé un cas limite que notre implémentation ne gère pas correctement.
+Lorsque la taille de la table de gradients interagit de manière défavorable avec la fonction d’indexation (notamment via la table de permutations), des motifs répétitifs ou des discontinuités visuelles peuvent apparaître, par exemple sous forme de lignes distinctes.
+
+Ce phénomène est généralement lié à des effets de périodicité induits par une mauvaise distribution des indices.
+
+Une amélioration possible consisterait à :
+\begin{itemize}
+    \item utiliser une table de permutations de taille adaptée (souvent une puissance de deux),
+    \item éviter les relations de divisibilité simples entre les différentes structures utilisées,
+    \item ou encore augmenter artificiellement la taille de la table afin de réduire les répétitions visibles.
+\end{itemize}
 
 \subsection{Conditions d'apparition}
 
-Un autre paramètre utilisé dans notre implémentation pour Perlin en trois dimensions est la condition d'apparition. 
-Il existe différents types de conditions d'apparition.
+Dans notre implémentation tridimensionnelle, nous avons introduit des conditions d’apparition permettant de filtrer ou de moduler les zones où le bruit est visible.
 
 \subsubsection{Valeur seuil}
 
-Si nous souhaitons mettre des conditions sur la valeur de bruit, il est possible de définir une valeur seuil. 
-Si la valeur seuil est grande, moins de bruits de perlin seront représentés.
-À l'inverse, une valeur seuil petite est moins restrictement donc la carte générée est plus fournie dans ce cas-ci. 
+Une condition simple consiste à définir un seuil sur la valeur du bruit. Seuls les points dont la valeur dépasse ce seuil sont conservés.
+
+Une valeur de seuil élevée restreint fortement les zones visibles, tandis qu’un seuil plus faible produit une surface plus dense. 
+Ce type de filtrage est couramment utilisé pour générer des structures discrètes, telles que des îlots ou des cavités.
 
 \subsubsection{Restriction de zone}
 
-Pour une restriction de zone, nous ne représentons pas le bruit de perlin au-delà d'une coordonnée définie sur un axe. 
-Afin de ne pas avoir une coupure nette, nous faisons une transition près de la zone délimitée et représentons quelques valeurs de bruit de perlin. 
+Il est également possible de restreindre l’affichage du bruit à une région donnée de l’espace, par exemple en limitant les coordonnées selon un axe.
+
+Afin d’éviter des transitions abruptes, une fonction de lissage est appliquée à proximité des frontières de la zone.
+Cela permet d’introduire une transition progressive et visuellement cohérente entre les zones visibles et non visibles.
