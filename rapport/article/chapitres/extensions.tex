@@ -2,12 +2,12 @@
 
 \subsection{Mouvement brownien fractal}
 
-Afin d’enrichir les structures générées tout en conservant un coût de calcul raisonnable, une fonction de bruit simple est transformée en une fonction de bruit fractale, souvent appelée \textit{fractal Brownian motion} (fBm).
+Afin d’enrichir les structures générées tout en conservant un coût de calcul raisonnable, une fonction de bruit simple est transformée en une fonction de bruit fractale, souvent appelée \textit{fractal Brownian motion} (fBm) comme dans l'article de Dave Mount \cite{Student_Level_Explanation_PerlinNoise} et celui de Sheldon Taylor, Owen Sharpe et Jiju Peethambaran \cite{AnalysisDetails_Parameters_gradientNoise}.
 
 Contrairement à une fonction strictement périodique, le bruit de Perlin est une fonction pseudo-aléatoire continue.
 Néanmoins, il peut être interprété comme un signal caractérisé par différentes composantes fréquentielles.
 
-Le principe consiste à superposer plusieurs instances de la fonction de bruit, chacune étant évaluée à une fréquence et une amplitude différentes, comme décrit dans la section \textit{Layered Noise} de \cite{Student_Level_Explanation_PerlinNoise}. 
+Le principe consiste à superposer plusieurs instances de la fonction de bruit, chacune étant évaluée à une fréquence et une amplitude différentes, comme décrit dans la section \textit{Layered Noise} de l'article de Dave Mount \cite{Student_Level_Explanation_PerlinNoise}. 
 
 Le nombre de couches superposées est appelé le nombre d’\textit{octaves}. 
 À chaque octave, la fréquence est multipliée par un facteur appelé \texttt{lacunarity}, tandis que l’amplitude est réduite selon un facteur appelé \texttt{persistence}.
@@ -46,7 +46,7 @@ Une valeur faible de \texttt{persistence} atténue rapidement les hautes fréque
 
 \subsection{Réapplication de Perlin}
 
-Dans le prolongement des travaux présentés dans \cite{Inspi_Visualiser_PerlinNoise}, nous avons choisi de superposer plusieurs applications de bruit de Perlin en trois dimensions, chacune utilisant des paramètres distincts.
+Dans le prolongement des travaux présentés dans le travail de Franky Hung \cite{Inspi_Visualiser_PerlinNoise}, nous avons choisi de superposer plusieurs applications de bruit de Perlin en trois dimensions, chacune utilisant des paramètres distincts.
 
 Cette approche permet de combiner plusieurs champs de bruit aux caractéristiques différentes, enrichissant ainsi la complexité visuelle du résultat.
 
