@@ -1,4 +1,43 @@
 \section{Implémentation}
 
-\subsection{Surfaces de travail}
+\subsection{Algorithme de Perlin}
 
+\subsubsection{Définir l'espace}
+(par exemple dans \textbf{OpenFrameWorks}, un \texttt{mesh})
+
+\subsection{Vecteurs de gradient}
+Dans notre implémentation, ces vecteurs sont généralement bornés dans l’intervalle $[-1,1]$ pour chaque composante.
+Dans d'autres implémentations, ils peuvent également étre générés dans une intervalle plus large puis normalisés.
+Ce respect d'intervalle permet de garder la cohérence dans les résultats et de ne pas avoir un ensemble de valeurs hétérogènes.
+
+Afin d’éviter des motifs répétitifs trop visibles, une table de permutations est utilisée pour indexer pseudo-aléatoirement ces vecteurs de gradient.
+
+\subsubsection{Interpolation}
+
+Dans sa forme la plus simple, l’interpolation linéaire (ou \textit{linear interpolation}) est définie par :
+\begin{verbatim}
+float lerp(float x, float y, float alpha):
+    return (1 - alpha) * x + alpha * y
+\end{verbatim}
+
+Cependant, dans l’algorithme de Perlin, cette interpolation linéaire est combinée avec une autre fonction, discutée ultérieurement.
+
+L’interpolation se fait progressivement selon chaque axe (par exemple en 2D : d’abord selon $x$, puis selon $y$).
+Le paramètre d’interpolation correspond à la partie fractionnaire des coordonnées du point dans la cellule.
+
+Dans l’algorithme de Perlin, une fonction de lissage (telle que la fonction \textit{fade}) est appliquée à ces paramètres avant interpolation, afin de garantir une transition douce entre les cellules et éviter les discontinuités visibles.
+
+\begin{verbatim}
+float fade(float t) :
+        return 6* t**5 - 15 * t**4 + 10 t**3
+\end{verbatim}
+
+\section{Paramètres et extensions}
+
+\subsection{Réapplication de Perlin}
+Pour chaque instance de bruit, une valeur est calculée indépendamment.
+Ces différentes contributions sont ensuite combinées à l’aide d’un masque (\texttt{mask}), qui permet de pondérer leur influence respective.
+
+Le mélange est réalisé à l’aide d’une fonction \texttt{smoothstep}, qui assure une transition progressive et continue entre les différentes zones d’influence, évitant ainsi les discontinuités visuelles.
+
+\subsection{Amplitude}

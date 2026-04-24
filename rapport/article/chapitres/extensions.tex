@@ -2,7 +2,7 @@
 
 \subsection{Mouvement brownien fractal}
 
-Afin d’enrichir les structures générées tout en conservant un coût de calcul raisonnable, une fonction de bruit simple est transformée en une fonction de bruit fractale, souvent appelée \textit{fractal Brownian motion} (fBm) comme dans l'article de Dave Mount \cite{Student_Level_Explanation_PerlinNoise} et celui de Sheldon Taylor, Owen Sharpe et Jiju Peethambaran \cite{AnalysisDetails_Parameters_gradientNoise}.
+Afin d’enrichir les structures générées tout en conservant un coût de calcul raisonnable, une fonction de bruit simple est transformée en une fonction de bruit fractale, appelée également \textit{fractal Brownian motion} (fBm). 
 
 Contrairement à une fonction strictement périodique, le bruit de Perlin est une fonction pseudo-aléatoire continue.
 Néanmoins, il peut être interprété comme un signal caractérisé par différentes composantes fréquentielles.
@@ -34,6 +34,7 @@ Cela s’explique par l’ajout progressif de composantes de plus en plus haute 
 
 Cependant, lorsque ces fréquences dépassent la résolution du maillage ou de l’échantillonnage spatial, les détails deviennent trop fins pour être correctement représentés.
 Ce phénomène peut entraîner des artefacts visuels, similaires à de l’aliasing, donnant une apparence bruitée ou instable à la surface.
+% expliquer article sur l'aliasing
 
 \subsubsection{Interprétation}
 
@@ -51,7 +52,3 @@ Dans le prolongement des travaux présentés dans le travail de Franky Hung \cit
 
 Cette approche permet de combiner plusieurs champs de bruit aux caractéristiques différentes, enrichissant ainsi la complexité visuelle du résultat.
 
-Pour chaque instance de bruit, une valeur est calculée indépendamment.
-Ces différentes contributions sont ensuite combinées à l’aide d’un masque (\texttt{mask}), qui permet de pondérer leur influence respective.
-
-Le mélange est réalisé à l’aide d’une fonction \texttt{smoothstep}, qui assure une transition progressive et continue entre les différentes zones d’influence, évitant ainsi les discontinuités visuelles.

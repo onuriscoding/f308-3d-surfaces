@@ -16,31 +16,17 @@ Afin de produire un bruit continu à partir de valeurs discrètes, les fonctions
 L’interpolation consiste à calculer une valeur intermédiaire entre deux (ou plusieurs) points.
 Selon la fonction utilisée, la transition peut être plus ou moins lisse.
 
-Dans sa forme la plus simple, l’interpolation linéaire (ou \textit{linear interpolation}) est définie par :
-\begin{verbatim}
-float lerp(float x, float y, float alpha):
-    return (1 - alpha) * x + alpha * y
-\end{verbatim}
-
-Cependant, dans l’algorithme de Perlin, cette interpolation linéaire est combinée avec une autre fonction, discutée ultérieurement.
-
 \subsection{Fonctionnement de l'algorithme de Perlin} 
 
 L’algorithme de Perlin peut être décomposé en plusieurs étapes : la discrétisation de l’espace, l’attribution de vecteurs de gradient, le calcul de produits scalaires, puis l’interpolation des valeurs obtenues.
 
 \subsubsection{Définir l'espace} 
 
-L’espace de travail (par exemple dans \textbf{OpenFrameWorks}, un \texttt{mesh}) est subdivisé en cellules régulières formant une grille. Chaque point de l’espace appartient ainsi à une cellule définie par ses sommets.
+L’espace de travail est subdivisé en cellules régulières formant une grille. Chaque point de l’espace appartient ainsi à une cellule définie par ses sommets.
 
 \subsubsection{Vecteurs de gradient}
 
 Une table finie de vecteurs de gradient est générée au préalable.
-Dans notre implémentation, ces vecteurs sont généralement bornés dans l’intervalle $[-1,1]$ pour chaque composante.
-Dans d'autres implémentations, ils peuvent également étre générés dans une intervalle plus large puis normalisés. 
-Ce respect d'intervalle permet de garder la cohérence dans les résultats et de ne pas avoir un ensemble de valeurs hétérogènes. 
-
-Afin d’éviter des motifs répétitifs trop visibles, une table de permutations est utilisée pour indexer pseudo-aléatoirement ces vecteurs de gradient.
-
 Pour chaque sommet d’une cellule, un vecteur de gradient est associé en fonction de ses coordonnées entières, typiquement via une fonction de hachage basée sur la table de permutations.
 
 \subsubsection{Produit scalaire}
@@ -57,12 +43,3 @@ Cela produit une valeur scalaire par sommet.
 
 Les valeurs obtenues aux sommets sont ensuite interpolées afin d’obtenir une valeur unique pour le point considéré.
 
-L’interpolation se fait progressivement selon chaque axe (par exemple en 2D : d’abord selon $x$, puis selon $y$). 
-Le paramètre d’interpolation correspond à la partie fractionnaire des coordonnées du point dans la cellule.
-
-Dans l’algorithme de Perlin, une fonction de lissage (telle que la fonction \textit{fade}) est appliquée à ces paramètres avant interpolation, afin de garantir une transition douce entre les cellules et éviter les discontinuités visibles.
-
-\begin{verbatim}
-float fade(float t) : 
-	return 6* t**5 - 15 * t**4 + 10 t**3
-\end{verbatim}
