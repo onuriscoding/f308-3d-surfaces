@@ -6,6 +6,7 @@ L’amplitude contrôle l’intensité des variations du bruit de Perlin. En deu
 
 En trois dimensions, cette interprétation directe n’est plus possible puisque les axes spatiaux sont déjà utilisés. 
 L’amplitude peut alors être représentée indirectement, par exemple à l’aide de la couleur ou de son intensité, sous réserve que ces canaux ne soient pas déjà utilisés pour encoder d’autres informations.
+Dans notre implémentation, les couleurs et leur intensité sont déjà utilisés pour encoder l'information plus décrite dans la sous-section \texttt{Réapplication de Perlin} \ref{ReapplicationPerlin}.
 
 \subsection{Rotation des vecteurs de gradient}
 
@@ -22,6 +23,7 @@ Néanmoins, la structure globale de la surface reste similaire, bien que les mot
 
 Dans notre implémentation, le nombre de vecteurs de gradient correspond à la taille de la table de gradients pré-générés.
 Cette table est utilisée pour associer, via une fonction de hachage (souvent basée sur une permutation), un vecteur de gradient à chaque sommet de la grille.
+Cette technique est également présentée dans la version de \textit{Improved Perlin Noise}  de son créateur, Ken Perlin \cite{PerlinNoise}.
 
 Ce paramètre influence la diversité des directions possibles pour les gradients. 
 Une table de petite taille peut introduire des répétitions visibles dans le bruit, tandis qu’une table plus grande permet de réduire ces artefacts périodiques.
