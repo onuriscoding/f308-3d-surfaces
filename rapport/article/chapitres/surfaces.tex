@@ -1,20 +1,10 @@
-\section{Surfaces}
+\section{Fonctionnement de l'algorithme}
 
 Ce chapitre se concentre sur le fonctionnement de l'algorithme de Perlin de Ken Perlin \cite{PerlinNoise}.
 
 \subsection{Notion de bruit}
 
 Dans le cadre de l’algorithme de Perlin, le bruit correspond à une fonction pseudo-aléatoire déterministe qui associe une valeur scalaire à des coordonnées données.
-Contrairement à un bruit purement aléatoire, cette fonction garantit une continuité spatiale : des points proches dans l’espace produisent des valeurs proches.
-
-Ces valeurs de bruit peuvent ensuite être interprétées à différentes étapes de la modélisation, par exemple pour générer des hauteurs dans un relief, des textures ou d’autres caractéristiques d’un espace.
-
-\subsection{Notion de fonction de bruit}
-
-Afin de produire un bruit continu à partir de valeurs discrètes, les fonctions de bruit reposent sur des mécanismes d’interpolation entre plusieurs valeurs.
-
-L’interpolation consiste à calculer une valeur intermédiaire entre deux (ou plusieurs) points.
-Selon la fonction utilisée, la transition peut être plus ou moins lisse.
 
 \subsection{Fonctionnement de l'algorithme de Perlin} 
 

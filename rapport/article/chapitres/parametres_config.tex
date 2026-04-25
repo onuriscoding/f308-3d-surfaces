@@ -2,37 +2,28 @@
 
 \subsection{Amplitude}
 
-L’amplitude contrôle l’intensité des variations du bruit de Perlin. En deux dimensions, elle peut être interprétée comme la hauteur maximale d’une surface, la valeur du bruit étant utilisée pour moduler le relief.
-
-En trois dimensions, cette interprétation directe n’est plus possible puisque les axes spatiaux sont déjà utilisés. 
-L’amplitude peut alors être représentée indirectement, par exemple à l’aide de la couleur ou de son intensité, sous réserve que ces canaux ne soient pas déjà utilisés pour encoder d’autres informations.
-Dans notre implémentation, les couleurs et leur intensité sont déjà utilisés pour encoder l'information plus décrite dans la sous-section \texttt{Réapplication de Perlin} \ref{ReapplicationPerlin}.
+L’amplitude contrôle l’intensité des variations du bruit de Perlin. En deux dimensions, elle peut être interprétée comme la hauteur maximale d’une surface.
+C'est un cas d'interprétation du résultat de la valeur de Perlin pour un point. 
+L'amplitude permet de représenter des reliefs en deux dimensions comme des montages. 
 
 \subsection{Rotation des vecteurs de gradient}
 
 Un paramètre de rotation peut être appliqué aux vecteurs de gradient, avec des valeurs comprises entre $0$ et $360$ degrés.
-
-Lorsque l’angle de rotation est nul (ou un multiple de $360$), la surface générée reste inchangée.
-En revanche, pour toute autre valeur, tous les vecteurs de gradient sont soumis à une rotation identique.
-
-Les vecteurs de distance, quant à eux, ne sont pas modifiés. 
-Par conséquent, les produits scalaires changent, ce qui entraîne une modification des valeurs du bruit.
-Néanmoins, la structure globale de la surface reste similaire, bien que les motifs puissent apparaître déformés ou orientés différemment.
+Le résultat visuel dépend de la rotation des vecteurs.
 
 \subsection{Nombre de vecteurs de gradient}
+\textbf{TO DO QUENTIN PLEASE}
 
-Dans notre implémentation, le nombre de vecteurs de gradient correspond à la taille de la table de gradients pré-générés.
-Cette table est utilisée pour associer, via une fonction de hachage (souvent basée sur une permutation), un vecteur de gradient à chaque sommet de la grille.
-Cette technique est également présentée dans la version de \textit{Improved Perlin Noise}  de son créateur, Ken Perlin \cite{PerlinNoise}.
+Le nombre de cellules définit le nombre de vecteurs de gradient. 
+Plus il y a de cellules, moins il y a de répétitions dans la représentation.
+Un  nombre petit de cellules peut introduire des répétitions visibles dans le bruit, tandis qu’une table plus grande permet de réduire ces artefacts périodiques.
 
-Ce paramètre influence la diversité des directions possibles pour les gradients. 
-Une table de petite taille peut introduire des répétitions visibles dans le bruit, tandis qu’une table plus grande permet de réduire ces artefacts périodiques.
-
-\subsubsection{Cas limites}
+\subsubsection{Problème observé}
 
 Nous avons observé un cas limite que notre implémentation ne gère pas correctement.
 Lorsque la taille de la table de gradients interagit de manière défavorable avec la fonction d’indexation (notamment via la table de permutations), des motifs répétitifs ou des discontinuités visuelles peuvent apparaître, par exemple sous forme de lignes distinctes.
-
+Dans le cas où la surface est composée de plusieurs séries de cellules, nous observons une discontinuité visuelle entre chaque répétition. 
+Ce phénomène est observé puisque les vecteurs de gradient sont choisis indépendemment des coordonnées associée à une cellule. 
 Ce phénomène est généralement lié à des effets de périodicité induits par une mauvaise distribution des indices.
 
 Une amélioration possible consisterait à :
@@ -42,20 +33,13 @@ Une amélioration possible consisterait à :
     \item ou encore augmenter artificiellement la taille de la table afin de réduire les répétitions visibles.
 \end{itemize}
 
-\subsection{Conditions d'apparition}
+\subsection{Valeur seuil}
 
-Dans notre implémentation tridimensionnelle, nous avons introduit des conditions d’apparition permettant de filtrer ou de moduler les zones où le bruit est visible.
+En trois dimensions, nous avons introduit des conditions d’apparition permettant de filtrer ou de moduler les zones où le bruit est visible.
 
-\subsubsection{Valeur seuil}
-
-Une condition simple consiste à définir un seuil sur la valeur du bruit. Seuls les points dont la valeur dépasse ce seuil sont conservés.
+Une condition simple définit un seuil sur la valeur du bruit. 
+Seuls les points dont la valeur dépasse ce seuil sont conservés.
 
 Une valeur de seuil élevée restreint fortement les zones visibles, tandis qu’un seuil plus faible produit une surface plus dense. 
 Ce type de filtrage est couramment utilisé pour générer des structures discrètes, telles que des îlots ou des cavités.
 
-\subsubsection{Restriction de zone}
-
-Il est également possible de restreindre l’affichage du bruit à une région donnée de l’espace, par exemple en limitant les coordonnées selon un axe.
-
-Afin d’éviter des transitions abruptes, une fonction de lissage est appliquée à proximité des frontières de la zone.
-Cela permet d’introduire une transition progressive et visuellement cohérente entre les zones visibles et non visibles.
