@@ -53,7 +53,7 @@
 % Full-width abstract
 \renewcommand{\maketitlehookd}{%
     \begin{abstract}
-        \noindent Ce projet porte sur l’implémentation d’une application permettant de générer des cartes de bruit de Perlin en deux et en trois dimensions. Divers paramètres sont proposés afin de modifier la forme des cartes produites.
+        \noindent Ce projet porte sur l’implémentation d’une application permettant de générer des surfaces en deux et en trois dimensions avec l'algorithme de Perlin. Divers paramètres sont proposés afin de modifier la forme des cartes produites.
 		Le projet permet de répondre à la problématique lors de simulation digitalisée de différents environnements avec une transition cohérente. 
 		La procédure est utilisée notamment dans les jeux vidéos ou lors de simulation de texture d'un objet. 
         Le cœur du projet est développé en C++ à l’aide de la bibliothèque graphique \textbf{OpenFrameworks}.     
@@ -79,7 +79,8 @@ La procédure permet de créer des surfaces cohérentes à partir de valeurs pse
 Néanmoins, la résolution des cartes générées peut ne pas être suffisante avec Perlin. 
 Ce document se penche sur l’étude du fonctionnement de l’algorithme de Perlin.
 Puis il présente les différentes extensions qui peuvent être apportées sur l'application de Perlin. 
-Ensuite, il discute de l'influence des différents paramètres lors de la génération de cartes en mettant l'accent sur la fréquence. 
+Ensuite, il discute de l'influence des différents paramètres lors de la génération de surfaces en mettant l'accent sur la fréquence. 
+Pour finir, le document explique l'implémentation du programme pour l'application de Perlin.
 
 %------------------------------------------------
 
@@ -97,9 +98,9 @@ Ensuite, il discute de l'influence des différents paramètres lors de la géné
 \section{Conclusion}
 
 Ce travail a permis de présenter le fonctionnement de l’algorithme de Perlin pour la génération de cartes de bruit.
-Nous avons également abordé ses extensions, notamment à travers l’utilisation des octaves et la superposition de différentes paramétrisations.
-Enfin, une analyse des paramètres de configuration a été proposée, avec une attention particulière portée à la fréquence.
-
+Une analyse des paramètres a été proposée, avec une attention particulière portée à la fréquence.
+Puis, nous avons également abordé ses extensions, notamment à travers l’utilisation des octaves et la superposition de différentes paramétrisations.
+Enfin, nous avons discuté des choix d'implémentation pour ce projet et les subtilités des outils représentés.
 Dans une perspective d’approfondissement, il serait pertinent d’explorer d’autres algorithmes de génération de bruit.
 %----------------------------------------------------------------------------------------
 %	 REFERENCES

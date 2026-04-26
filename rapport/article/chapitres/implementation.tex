@@ -2,14 +2,26 @@
 
 \subsection{Algorithme de Perlin}
 
-\subsubsection{Cellules et vecteurs de gradient}
-
-\subsubsection{Table de permutations}
-
 \subsubsection{Surface de travail}
 
 Nous utilisons l'outil d'\textbf{OpenFrameWorks}, un \texttt{mesh}. 
 Cet outil permet de définir un espace où des points sont définis à la même distance.
+
+\subsubsection{Cellules et vecteurs de gradient}
+
+Les vecteurs de gradient sont initialisés aléatoirement au début de l'algorithme. 
+Ils sont contenus dans une liste. 
+Ensuite, les cellules sont initialisées. 
+Elles contiennent une liste de vecteurs de gradient. 
+Cela permet de représenter les vecteurs de gradient aux sommets de la cellule. 
+
+\subsubsection{Table de permutations}
+
+Une table de permutation est initialisée après celle des cellules. 
+Elle contient des indices mélangés aléatoirement en dessous du nombre de vecteurs de gradient uniques. 
+Elle est utilisée lors de la sélection de vecteurs de gradient lors du calcul du bruit. 
+Cela empêche de travailler toujours avec les mêmes vecteurs et évite donc un motif répétitif sur la surface. 
+Cette table apporte une méthode de hachage supplémentaire. 
 
 \subsubsection{Interpolation}
 
@@ -24,9 +36,5 @@ Le paramètre d’interpolation correspond à la partie fractionnaire des coordo
 
 Cependant, dans l’algorithme de Perlin, cette interpolation linéaire est combinée avec une autre fonction, celle de lissage.
 La fonction de lissage (telle que la fonction \textit{fade}) est appliquée à ces paramètres avant interpolation, afin de garantir une transition douce entre les cellules et éviter les discontinuités visibles.
-% mettre directement dans le Latex
-\begin{verbatim}
-float fade(float t) :
-        return 6* t**5 - 15 * t**4 + 10 t**3
-\end{verbatim}
+Elle prend la forme du pôlynome, $6 t^5 - 15 t^4 + 10 t^3$.
 
