@@ -2,8 +2,6 @@
 
 \subsection{Mouvement brownien fractal}
 
-Afin d’enrichir les structures générées tout en conservant un coût de calcul raisonnable, une fonction de bruit simple est transformée en une fonction de bruit fractale, appelée également \textit{fractal Brownian motion} (fBm). 
-
 Contrairement à une fonction strictement périodique, le bruit de Perlin est une fonction pseudo-aléatoire continue.
 Néanmoins, il peut être interprété comme un signal caractérisé par différentes composantes fréquentielles.
 
@@ -12,7 +10,7 @@ Le principe consiste à superposer plusieurs instances de la fonction de bruit, 
 Le nombre de couches superposées est appelé le nombre d’\textit{octaves}. 
 À chaque octave, la fréquence est multipliée par un facteur appelé \texttt{lacunarity}, tandis que l’amplitude est réduite selon un facteur appelé \texttt{persistence}.
 
-La valeur finale est normalisée afin de rester indépendante du nombre d’octaves.
+La valeur finale est normalisée par la valeur maximale afin de rester indépendante du nombre d’octaves.
 Elle correspond à une moyenne pondérée des différentes contributions :
 
 \begin{verbatim}

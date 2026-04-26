@@ -2,34 +2,40 @@
 
 Ce chapitre se concentre sur le fonctionnement de l'algorithme de Perlin de Ken Perlin \cite{PerlinNoise}.
 
-\subsection{Notion de bruit}
-
-Dans le cadre de l’algorithme de Perlin, le bruit correspond à une fonction pseudo-aléatoire déterministe qui associe une valeur scalaire à des coordonnées données.
-
 \subsection{Fonctionnement de l'algorithme de Perlin} 
+Que ce soit en 2D ou en 3D, l’algorithme de Perlin s’applique sur un ensemble de points répartis dans l’espace. 
+L’objectif est d’attribuer une valeur à chaque point de manière cohérente, en tenant compte de son voisinage, afin d’obtenir un résultat à la fois continu et pseudo-aléatoire.
 
-L’algorithme de Perlin peut être décomposé en plusieurs étapes : la discrétisation de l’espace, l’attribution de vecteurs de gradient, le calcul de produits scalaires, puis l’interpolation des valeurs obtenues.
-
-\subsubsection{Définir l'espace} 
-
-L’espace de travail est subdivisé en cellules régulières formant une grille. Chaque point de l’espace appartient ainsi à une cellule définie par ses sommets.
+\subsubsection{Cellules} 
+Pour introduire cette cohérence locale, l’espace est découpé en cellules virtuelles.
+ Une cellule correspond à un carré en 2D ou un cube en 3D, de côté 1. Chaque point de l’espace appartient à une cellule.
+À chaque coin de ces cellules est associé un vecteur de gradient. 
+Ce découpage permet de structurer l’espace et de faire en sorte que des points proches soient influencés par des éléments communs.
 
 \subsubsection{Vecteurs de gradient}
 
-Une table finie de vecteurs de gradient est générée au préalable.
-Pour chaque sommet d’une cellule, un vecteur de gradient est associé en fonction de ses coordonnées entières, typiquement via une fonction de hachage basée sur la table de permutations.
+Les vecteurs de gradient constituent la source du “bruit”.
+ Chaque sommet de cellule possède un vecteur généré de manière pseudo-aléatoire.
+ En 2D, une cellule possède donc 4 vecteurs (un par coin), et en 3D, 8 vecteurs.
 
-\subsubsection{Produit scalaire}
+\subsubsection{Calcul de la valeur de bruit}
 
-Pour un point donné à l’intérieur d’une cellule, on calcule les vecteurs de distance entre ce point et chacun des sommets de la cellule :
-\[
-\vec{d} = \text{position du point} - \text{position du sommet}.
-\]
-
-On calcule ensuite, pour chaque sommet, le produit scalaire entre ce vecteur de distance et le vecteur de gradient associé. 
-Cela produit une valeur scalaire par sommet.
+L’algorithme parcourt ensuite chaque point de la surface. Pour simplifier, on se place en 2D.
+Pour un point donné :
+\begin{itemize}
+	\item on détermine dans quelle cellule il se trouve
+	\item on calcule sa position locale à l’intérieur de cette cellule
+\end{itemize}
+Ensuite, pour chacun des coins de la cellule :
+\begin{itemize}
+	\item on calcule le vecteur de distance entre le point et le coin
+	\item on calcule le produit scalaire entre ce vecteur de distance et le vecteur de gradient associé au coin
+\end{itemize}
+On obtient ainsi une valeur scalaire par coin (donc 4 en 2D) chaque valeur correspond à l’influence de chaque vecteur de gradient respectif.
 
 \subsubsection{Interpolation}
 
-Les valeurs obtenues aux sommets sont ensuite interpolées afin d’obtenir une valeur unique pour le point considéré.
-
+Ces valeurs sont ensuite interpolées pour obtenir une unique valeur au point considéré.
+Cette interpolation permet de lisser les transitions entre les cellules. 
+Comme deux points voisins partagent en partie les mêmes vecteurs de gradient, leurs valeurs sont proches. 
+Cela crée une variation progressive et évite les discontinuités.
