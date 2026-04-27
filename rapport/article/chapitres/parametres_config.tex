@@ -11,27 +11,17 @@ L'amplitude permet de représenter des reliefs en deux dimensions comme des mont
 Un paramètre de rotation peut être appliqué aux vecteurs de gradient, avec des valeurs comprises entre $0$ et $360$ degrés.
 Le résultat visuel dépend de la rotation des vecteurs.
 
-\subsection{Nombre de vecteurs de gradient}
-\textbf{TO DO QUENTIN PLEASE}
+\subsection{Nombre de cellules}
 
-Le nombre de cellules définit le nombre de vecteurs de gradient. 
-Plus il y a de cellules, moins il y a de répétitions dans la représentation.
-Un  nombre petit de cellules peut introduire des répétitions visibles dans le bruit, tandis qu’une table plus grande permet de réduire ces artefacts périodiques.
+Le choix de la taille du tableau de cellules a un impact direct sur l’apparence du bruit généré.
+Lorsque la taille est petite , le nombre de vecteurs de gradient distincts est limité.
+Comme ces vecteurs sont réutilisés dans l’espace , des motifs similaires peuvent apparaître régulièrement. 
+Sur une grande surface, cela peut rendre la répétition visible et donner un aspect moins naturel.
+À l’inverse, lorsque le nombre de cellules est grand, les vecteurs de gradient sont plus variés.
+Les répétitions existent toujours, mais elles se produisent sur des distances beaucoup plus grandes, ce qui les rend difficilement perceptibles à l’œil.
+Le bruit paraît alors plus riche et plus naturel.
 
-\subsubsection{Problème observé}
-
-Nous avons observé un cas limite que notre implémentation ne gère pas correctement.
-Lorsque la taille de la table de gradients interagit de manière défavorable avec la fonction d’indexation (notamment via la table de permutations), des motifs répétitifs ou des discontinuités visuelles peuvent apparaître, par exemple sous forme de lignes distinctes.
-Dans le cas où la surface est composée de plusieurs séries de cellules, nous observons une discontinuité visuelle entre chaque répétition. 
-Ce phénomène est observé puisque les vecteurs de gradient sont choisis indépendemment des coordonnées associée à une cellule. 
-Ce phénomène est généralement lié à des effets de périodicité induits par une mauvaise distribution des indices.
-
-Une amélioration possible consisterait à :
-\begin{itemize}
-    \item utiliser une table de permutations de taille adaptée (souvent une puissance de deux),
-    \item éviter les relations de divisibilité simples entre les différentes structures utilisées,
-    \item ou encore augmenter artificiellement la taille de la table afin de réduire les répétitions visibles.
-\end{itemize}
+En pratique, il est donc préférable de choisir une valeur suffisamment grande pour éviter les répétitions visibles, sans pour autant surdimensionner inutilement le tableau.
 
 \subsection{Valeur seuil}
 

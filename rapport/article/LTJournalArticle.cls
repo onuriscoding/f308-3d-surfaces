@@ -215,7 +215,7 @@
 %----------------------------------------------------------------------------------------
 %	CUSTOM COMMANDS
 %----------------------------------------------------------------------------------------
-
+\usepackage{subcaption}
 \newcommand{\runninghead}[1]{\renewcommand{\runninghead}{#1}}
 
 \newcommand{\footertext}[1]{\renewcommand{\footertext}{#1}}
