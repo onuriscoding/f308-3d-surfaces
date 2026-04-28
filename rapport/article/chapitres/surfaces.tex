@@ -20,18 +20,19 @@ Les vecteurs de gradient constituent la source du “bruit”.
 
 \subsubsection{Calcul de la valeur de bruit}
 
-L’algorithme parcourt ensuite chaque point de la surface. Pour simplifier, on se place en 2D.
+L’algorithme parcourt ensuite chaque point de la surface. 
+Pour simplifier l'explication, nous nous plaçons en 2D.
 Pour un point donné :
 \begin{itemize}
-	\item on détermine dans quelle cellule il se trouve
-	\item on calcule sa position locale à l’intérieur de cette cellule
+	\item nous déterminons dans quelle cellule il se trouve
+	\item nous calculons sa position locale à l’intérieur de cette cellule
 \end{itemize}
 Ensuite, pour chacun des coins de la cellule :
 \begin{itemize}
-	\item on calcule le vecteur de distance entre le point et le coin
-	\item on calcule le produit scalaire entre ce vecteur de distance et le vecteur de gradient associé au coin
+	\item nous calculons le vecteur de distance entre le point et le coin
+	\item nous calculons le produit scalaire entre ce vecteur de distance et le vecteur de gradient associé au coin
 \end{itemize}
-On obtient ainsi une valeur scalaire par coin (donc 4 en 2D) chaque valeur correspond à l’influence de chaque vecteur de gradient respectif.
+Nous obtenons ainsi une valeur scalaire par coin (donc 4 en 2D) chaque valeur correspond à l’influence de chaque vecteur de gradient respectif.
 
 \subsubsection{Interpolation}
 

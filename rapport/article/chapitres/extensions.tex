@@ -27,12 +27,13 @@ Cette normalisation garantit que le résultat reste dans un intervalle comparabl
 
 \subsubsection{Observation}
 
-Lorsque le nombre d’octaves augmente, la surface générée devient plus riche en détails et plus irrégulière. 
+Lorsque le nombre d’octaves augmente comme dans l'image~\ref{fig:octaveRef}, la surface générée devient plus riche en détails et plus irrégulière. 
 Cela s’explique par l’ajout progressif de composantes de plus en plus haute fréquence.
 
 Cependant, lorsque ces fréquences dépassent la résolution du maillage ou de l’échantillonnage spatial, les détails deviennent trop fins pour être correctement représentés.
+Nous prenons comme image en appui la figure~\ref{fig:octaveLimit}.
 Ce phénomène peut entraîner des artefacts visuels, similaires à de l’aliasing, donnant une apparence bruitée ou instable à la surface.
-% expliquer article sur l'aliasing
+Pour plus d'explications sur ce phénomène, nous renvoyons à l'artciel de Reynald Arnerin sur la partie \textit{Aliasing}, \cite{AliasingArticle}.
 
 \subsubsection{Interprétation}
 
