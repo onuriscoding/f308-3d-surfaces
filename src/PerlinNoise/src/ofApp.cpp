@@ -10,7 +10,7 @@ void ofApp::setup(){
     size3D = 80;
     spacing = 3.0f;
     mapsDir = findMapsDir();
-    perlin2D = std::make_unique<Perlin2D>(0.02,250, 13.0, 4);
+    perlin2D = std::make_unique<Perlin2D>(2.001,250, 13.0, 4);
 
     perlinManager = std::make_unique<PerlinManager>(size3D);
     
@@ -66,7 +66,7 @@ void ofApp::setup(){
     seedInput.addListener(this, &ofApp::onSeedChanged);
 
     
-    ofBackground(0);
+    ofBackground(255);
     ofSetColor(255);
    
     mainCam.setPosition(0, 0, 600);
