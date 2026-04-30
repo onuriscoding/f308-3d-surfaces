@@ -48,6 +48,8 @@ Une valeur faible de \texttt{persistence} atténue rapidement les hautes fréque
 \subsection{Réapplication de Perlin}
 \label{ReapplicationPerlin}
 
-Dans le prolongement des travaux présentés dans le travail de Franky Hung \cite{Inspi_Visualiser_PerlinNoise}, nous avons choisi de superposer plusieurs applications de bruit de Perlin en trois dimensions, chacune utilisant des paramètres distincts.
-
-Cette approche permet de combiner plusieurs champs de bruit aux caractéristiques différentes, enrichissant ainsi la complexité visuelle du résultat.
+Sur une même surface, en deux ou trois dimensions, il est possible de superposer plusieurs instances du bruit de Perlin. Chaque instance est générée avec des paramètres différents (par exemple la seed, la fréquence ou encore l’amplitude), ce qui permet d’obtenir des structures variées.\\
+Ces différentes générations de bruit peuvent ensuite être combinées afin de produire un résultat plus riche visuellement.  Nous pouvons les superpose la l’aide d’une sommation 
+Cependant, une sommation peut entraîner des transitions abruptes entre les zones dominées par chaque bruit.\\
+Pour éviter ces discontinuités, une approche consiste à utiliser une nouvelle fonction de bruit comme masque. Cette fonction supplémentaire ne sert pas directement à générer une valeur visible, mais à pondérer l’influence de chaque instance de Perlin. Elle permet ainsi de contrôler progressivement la contribution de chaque bruit dans l’espace.\\
+De cette manière, les transitions entre les différentes structures deviennent continues, ce qui améliore la cohérence visuelle du résultat final.
