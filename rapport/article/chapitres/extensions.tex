@@ -27,13 +27,14 @@ Cette normalisation garantit que le résultat reste dans un intervalle comparabl
 
 \subsubsection{Observation}
 
-Lorsque le nombre d’octaves augmente comme dans l'image~\ref{fig:octaveRef}, la surface générée devient plus riche en détails et plus irrégulière. 
-Cela s’explique par l’ajout progressif de composantes de plus en plus haute fréquence.
+Lorsque le nombre d’octaves augmente, comme dans l'image~\ref{fig:octaveRef}, la surface générée devient plus riche en détails et plus irrégulière pour trois octaves appliquées dessus, comparée à celle avec une seule octave.
+Cela s’explique par l’ajout progressif de composantes de plus en plus hautes fréquences.
 
 Cependant, lorsque ces fréquences dépassent la résolution du maillage ou de l’échantillonnage spatial, les détails deviennent trop fins pour être correctement représentés.
 Nous prenons comme image en appui la figure~\ref{fig:octaveLimit}.
+La différence entre cinq et six octaves appliquées n'est pas perceptible, les détails de la surface ne sont pas nets.
 Ce phénomène peut entraîner des artefacts visuels, similaires à de l’aliasing, donnant une apparence bruitée ou instable à la surface.
-Pour plus d'explications sur ce phénomène, nous renvoyons à l'artciel de Reynald Arnerin sur la partie \textit{Aliasing}, \cite{AliasingArticle}.
+Pour plus d'explications sur ce phénomène, nous renvoyons à l'article de Reynald Arnerin sur la partie \textit{Aliasing}, \cite{AliasingArticle}.
 
 \subsubsection{Interprétation}
 
@@ -50,4 +51,3 @@ Une valeur faible de \texttt{persistence} atténue rapidement les hautes fréque
 Dans le prolongement des travaux présentés dans le travail de Franky Hung \cite{Inspi_Visualiser_PerlinNoise}, nous avons choisi de superposer plusieurs applications de bruit de Perlin en trois dimensions, chacune utilisant des paramètres distincts.
 
 Cette approche permet de combiner plusieurs champs de bruit aux caractéristiques différentes, enrichissant ainsi la complexité visuelle du résultat.
-

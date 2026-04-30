@@ -4,7 +4,7 @@
 
 L’amplitude contrôle l’intensité des variations du bruit de Perlin. En deux dimensions, elle peut être interprétée comme la hauteur maximale d’une surface.
 C'est un cas d'interprétation du résultat de la valeur de Perlin pour un point. 
-L'amplitude permet de représenter des reliefs en deux dimensions comme des montages. 
+L'amplitude permet de représenter des reliefs en deux dimensions, comme des montagnes. 
 
 \subsection{Rotation des vecteurs de gradient}
 
@@ -14,8 +14,8 @@ Le résultat visuel dépend de la rotation des vecteurs.
 \subsection{Nombre de cellules}
 
 Le choix de la taille du tableau de cellules a un impact direct sur l’apparence du bruit généré.
-Lorsque la taille est petite , le nombre de vecteurs de gradient distincts est limité.
-Comme ces vecteurs sont réutilisés dans l’espace , des motifs similaires peuvent apparaître régulièrement. 
+Lorsque la taille est petite, le nombre de vecteurs de gradient distincts est limité.
+Comme ces vecteurs sont réutilisés dans l’espace, des motifs similaires peuvent apparaître régulièrement. 
 Sur une grande surface, cela peut rendre la répétition visible et donner un aspect moins naturel.
 À l’inverse, lorsque le nombre de cellules est grand, les vecteurs de gradient sont plus variés.
 Les répétitions existent toujours, mais elles se produisent sur des distances beaucoup plus grandes, ce qui les rend difficilement perceptibles à l’œil.
@@ -31,6 +31,5 @@ Une condition simple définit un seuil sur la valeur du bruit.
 Seuls les points dont la valeur dépasse ce seuil sont conservés.
 
 Une valeur de seuil élevée restreint fortement les zones visibles, tandis qu’un seuil plus faible produit une surface plus dense. 
-Pour plus de visibilités, nous utilisons les figures représentées ici~\ref{fig:valeurSeuil}.
+Pour plus de visibilité, nous utilisons les figures représentées ici~\ref{fig:valeurSeuil}.
 Ce type de filtrage est couramment utilisé pour générer des structures discrètes, telles que des îlots ou des cavités.
-

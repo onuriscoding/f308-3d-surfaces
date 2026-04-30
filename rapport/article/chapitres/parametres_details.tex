@@ -6,18 +6,18 @@ Avant d’être évaluées par la fonction de bruit, les coordonnées sont multi
 \]
 
 Ce paramètre influence le nombre de points présents dans une cellule.
- Lorsque la fréquence est faible, il y a beaucoup de points dans une même cellule. 
- Ces points sont alors influencés par les mêmes vecteurs de gradient, ce qui produit de grandes zones homogènes.
+Lorsque la fréquence est faible, il y a beaucoup de points dans une même cellule. 
+Ces points sont alors influencés par les mêmes vecteurs de gradient, ce qui produit de grandes zones homogènes.
 À l’inverse, lorsque la fréquence est élevée, il y a moins de points par cellule. Les points sont donc influencés plus rapidement par des gradients différents, ce qui crée des variations plus fines.
 
 \subsubsection{Cas limites}
 
 Nous étudions différents régimes de la fréquence \textit{freq}, en considérant son effet sur l’évaluation de la fonction de bruit.
 
-Lorsque la fréquence est égale à 1, on évalue directement noise(x,y).
+Lorsque la fréquence est égale à 1, on évalue directement \texttt{noise}(x,y).
 Comme les coordonnées du maillage sont entières, les points évalués correspondent aux sommets de la grille interne du bruit de Perlin. 
 À ces positions, les vecteurs de distance sont nuls, donc les produits scalaires sont nuls, et l’interpolation donne une valeur nulle.
-La surface obtenue est donc uniforme comme visible dans la figure~\ref{fig:freqEntier}.
+La surface obtenue est donc uniforme, comme visible dans la figure~\ref{fig:freqEntier}.
 
 Lorsque la fréquence est égale à 0, toutes les coordonnées sont ramenées au même point, généralement (0,0).
 On évalue donc toujours la même valeur de bruit, ce qui produit également une surface uniforme. 
@@ -34,7 +34,7 @@ Le résultat reste une valeur constante, ce qui produit une surface uniforme.
 Enfin, lorsque la fréquence est supérieure à 1 mais non entière, les points se trouvent à l’intérieur des cellules.
 Cela active l’interpolation et produit des variations.
 Cependant, si la fréquence est très élevée, les variations deviennent très rapides.
-Si le maillage n’est pas assez fin, ces variations sont mal représentées, ce qui peut entraîner des artefacts visuels comme visible dans l'image~\ref{fig:freqAliasing}.
+Si le maillage n’est pas assez fin, ces variations sont mal représentées, ce qui peut entraîner des artefacts visuels, comme visible dans l'image~\ref{fig:freqAliasing}.
 
 \subsubsection{Remarque}
 

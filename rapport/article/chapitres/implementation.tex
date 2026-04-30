@@ -1,10 +1,12 @@
 \section{Implémentation}
 
+L'implémentation de l'algorithme de perlin se trouve sur ce dépôt \cite{Implementation} dans la partie \texttt{src -> PerlinNoise -> src}.
+
 \subsection{Algorithme de Perlin}
 
 \subsubsection{Surface de travail}
 
-Nous utilisons l'outil d'\textbf{OpenFrameWorks}, un \texttt{mesh}. 
+Nous utilisons l'outil d'\textbf{OpenFrameworks}, un \texttt{mesh}. 
 Cet outil permet de définir un espace où des points sont définis à la même distance.
 
 \subsubsection{Cellules et vecteurs de gradient}
@@ -36,5 +38,4 @@ Le paramètre d’interpolation correspond à la partie fractionnaire des coordo
 
 Cependant, dans l’algorithme de Perlin, cette interpolation linéaire est combinée avec une autre fonction, celle de lissage.
 La fonction de lissage (telle que la fonction \textit{fade}) est appliquée à ces paramètres avant interpolation, afin de garantir une transition douce entre les cellules et éviter les discontinuités visibles.
-Elle prend la forme du pôlynome, $6 t^5 - 15 t^4 + 10 t^3$.
-
+Elle prend la forme du polynôme $6 t^5 - 15 t^4 + 10 t^3$.

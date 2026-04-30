@@ -8,15 +8,15 @@ L’objectif est d’attribuer une valeur à chaque point de manière cohérente
 
 \subsubsection{Cellules} 
 Pour introduire cette cohérence locale, l’espace est découpé en cellules virtuelles.
- Une cellule correspond à un carré en 2D ou un cube en 3D, de côté 1. Chaque point de l’espace appartient à une cellule.
+Une cellule correspond à un carré en 2D ou un cube en 3D, de côté 1. Chaque point de l’espace appartient à une cellule.
 À chaque coin de ces cellules est associé un vecteur de gradient. 
 Ce découpage permet de structurer l’espace et de faire en sorte que des points proches soient influencés par des éléments communs.
 
 \subsubsection{Vecteurs de gradient}
 
-Les vecteurs de gradient constituent la source du “bruit”.
- Chaque sommet de cellule possède un vecteur généré de manière pseudo-aléatoire.
- En 2D, une cellule possède donc 4 vecteurs (un par coin), et en 3D, 8 vecteurs.
+Les vecteurs de gradient constituent la source du « bruit ».
+Chaque sommet de cellule possède un vecteur généré de manière pseudo-aléatoire.
+En 2D, une cellule possède donc 4 vecteurs (un par coin), et en 3D, 8 vecteurs.
 
 \subsubsection{Calcul de la valeur de bruit}
 
@@ -24,15 +24,15 @@ L’algorithme parcourt ensuite chaque point de la surface.
 Pour simplifier l'explication, nous nous plaçons en 2D.
 Pour un point donné :
 \begin{itemize}
-	\item nous déterminons dans quelle cellule il se trouve
-	\item nous calculons sa position locale à l’intérieur de cette cellule
+        \item nous déterminons dans quelle cellule il se trouve
+        \item nous calculons sa position locale à l’intérieur de cette cellule
 \end{itemize}
 Ensuite, pour chacun des coins de la cellule :
 \begin{itemize}
-	\item nous calculons le vecteur de distance entre le point et le coin
-	\item nous calculons le produit scalaire entre ce vecteur de distance et le vecteur de gradient associé au coin
+        \item nous calculons le vecteur de distance entre le point et le coin
+        \item nous calculons le produit scalaire entre ce vecteur de distance et le vecteur de gradient associé au coin
 \end{itemize}
-Nous obtenons ainsi une valeur scalaire par coin (donc 4 en 2D) chaque valeur correspond à l’influence de chaque vecteur de gradient respectif.
+Nous obtenons ainsi une valeur scalaire par coin (donc 4 en 2D). Chaque valeur correspond à l’influence de chaque vecteur de gradient respectif.
 
 \subsubsection{Interpolation}
 
