@@ -48,8 +48,15 @@ Une valeur faible de \texttt{persistence} atténue rapidement les hautes fréque
 \subsection{Réapplication de Perlin}
 \label{ReapplicationPerlin}
 
-Sur une même surface, en deux ou trois dimensions, il est possible de superposer plusieurs instances du bruit de Perlin. Chaque instance est générée avec des paramètres différents (par exemple la seed, la fréquence ou encore l’amplitude), ce qui permet d’obtenir des structures variées.\\
-Ces différentes générations de bruit peuvent ensuite être combinées afin de produire un résultat plus riche visuellement.  Nous pouvons les superpose la l’aide d’une sommation 
-Cependant, une sommation peut entraîner des transitions abruptes entre les zones dominées par chaque bruit.\\
-Pour éviter ces discontinuités, une approche consiste à utiliser une nouvelle fonction de bruit comme masque. Cette fonction supplémentaire ne sert pas directement à générer une valeur visible, mais à pondérer l’influence de chaque instance de Perlin. Elle permet ainsi de contrôler progressivement la contribution de chaque bruit dans l’espace.\\
-De cette manière, les transitions entre les différentes structures deviennent continues, ce qui améliore la cohérence visuelle du résultat final.
+Sur une même surface, en deux ou trois dimensions, il est possible de superposer plusieurs instances de bruit de Perlin. 
+Chaque instance est générée avec des paramètres différents (par exemple la fréquence), ce qui permet d’obtenir des structures variées. 
+Ces différentes réalisations du bruit peuvent ensuite être combinées afin de produire un résultat visuellement plus riche comme nous pouvons le voir dans la figure~\ref{fig:reapplicationPerlin}.
+
+Une approche naturelle consiste à les superposer à l’aide d’une sommation. 
+Toutefois, une simple somme peut entraîner des transitions abruptes entre les zones dominées par chaque instance de bruit.
+Afin d’éviter ces discontinuités, il est possible d’introduire une fonction de bruit supplémentaire jouant le rôle de masque.
+
+Cette fonction n’a pas pour objectif de générer directement une valeur visible, mais plutôt de pondérer l’influence de chaque instance de bruit. 
+Elle permet ainsi de moduler progressivement la contribution de chacune dans l’espace.
+
+De cette manière, les transitions entre les différentes structures deviennent continues, ce qui améliore la cohérence visuelle du résultat final
